@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kỷ niệm 2 đứa mình ✨</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffd1dc 0%, #e6e6fa 25%, #ffefd5 50%, #e6e6fa 75%, #ffd1dc 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            color: #4a4a4a;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ── FX Canvas (lightweight) ── */
+        #fxCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        /* ── Background ── */
+        .magic-sparkles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .magic-sparkles::before,
+        .magic-sparkles::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: sparkleLayer 8s linear infinite;
+            opacity: 0.4;
+        }
+
+        .magic-sparkles::after {
+            animation-delay: -4s;
+            transform: rotate(45deg);
+        }
+
+        @keyframes sparkleLayer {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-50px);
+            }
+        }
+
+        .floating-hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.4rem;
+            animation: floatHeart var(--fd) ease-in-out infinite;
+            animation-delay: var(--dl);
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translate(0, 100vh) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(var(--tx), -100vh) rotate(360deg);
+            }
+        }
+
+        /* ── Welcome ── */
+        .welcome {
+            text-align: center;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .welcome h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInScale 2s ease;
+        }
+
+        .welcome p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            line-height: 1.6;
+            animation: fadeIn 2s ease 0.5s both;
+        }
+
+        /* ── Memory Cards ── */
+        .memory-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem 2rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            z-index: 3;
+            position: relative;
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s ease;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .memory-img {
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .img-wrapper:hover .memory-img {
+            transform: scale(1.05);
+        }
+
+        .memory-date {
+            font-family: 'Dancing Script', cursive;
+            color: #ff69b4;
+            font-size: 1.2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .memory-caption {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        /* ── Final Message ── */
+        .final-message {
+            text-align: center;
+            padding: 3rem 1rem 5rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .final-message h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #ff69b4;
+            margin-bottom: 2rem;
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        /* ── Letter Card ── */
+        .letter-trigger {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* The card button */
+        #letterCard {
+            position: relative;
+            width: 340px;
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease, opacity 0.4s ease;
+            filter: drop-shadow(0 8px 28px rgba(200, 80, 140, 0.3));
+        }
+
+        #letterCard:hover {
+            transform: scale(1.05) rotate(-1deg);
+            filter: drop-shadow(0 14px 40px rgba(200, 80, 140, 0.45));
+        }
+
+        .card-body {
+            background: linear-gradient(145deg, #fffdf5, #fff8ee);
+            border-radius: 20px;
+            padding: 36px 32px 32px;
+            border: 2px solid rgba(255, 180, 200, 0.5);
+            box-shadow: inset 0 0 0 1px rgba(255, 200, 220, 0.3), 0 6px 20px rgba(0, 0, 0, 0.07);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative corner flourishes */
+        .card-body::before {
+            content: '✿';
+            position: absolute;
+            top: 10px;
+            left: 14px;
+            font-size: 16px;
+            color: #ffb6c1;
+            opacity: 0.7;
+        }
+
+        .card-body::after {
+            content: '✿';
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 16px;
+            color: #ffb6c1;
+            opacity: 0.7;
+        }
+
+        /* Red heart seal */
+        .card-seal {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ff3a6e, #e8204c);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 16px rgba(220, 40, 80, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        #letterCard:hover .card-seal {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-label {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #e04080;
+            margin-bottom: 6px;
+        }
+
+
+        .card-sublabel {
+            font-size: 0.95rem;
+            color: #cc7090;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── Letter wrapper with max-height for smooth open/close ── */
+        .letter-expand {
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .letter-expand.revealed {
+            max-height: 950px;
+        }
+
+        /* ── The letter paper ── */
+        #letter {
+            width: 100%;
+            opacity: 0;
+            transform: scale(0.9) translateY(16px);
+            pointer-events: none;
+            transition: opacity 0.45s ease 0.05s, transform 0.45s cubic-bezier(0.34, 1.1, 0.64, 1);
+        }
+
+        #letter.revealed {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* The paper */
+        .letter-paper {
+            background: linear-gradient(180deg, #fffdf5 0%, #fff8ee 50%, #fff5e8 100%);
+            border-radius: 20px;
+            padding: 48px 52px 40px;
+            border: 2px solid rgba(255, 180, 200, 0.4);
+            box-shadow:
+                0 20px 60px rgba(160, 40, 100, 0.12),
+                0 4px 16px rgba(0, 0, 0, 0.06),
+                inset 0 0 60px rgba(255, 240, 248, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Paper texture lines */
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(180deg,
+                    transparent, transparent 31px,
+                    rgba(255, 180, 200, 0.12) 31px, rgba(255, 180, 200, 0.12) 32px);
+            pointer-events: none;
+        }
+
+        /* Top decorative border */
+        .letter-border-top {
+            text-align: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1.5px solid rgba(255, 180, 200, 0.35);
+        }
+
+        .letter-border-top .flourish {
+            font-size: 1.4rem;
+            color: #ffb6c1;
+            letter-spacing: 8px;
+        }
+
+        .letter-border-top .letter-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #e04080;
+            margin-top: 8px;
+        }
+
+        /* Letter text */
+        .letter-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .letter-text p {
+            font-size: 1.05rem;
+            line-height: 2;
+            color: #5a3a4a;
+            margin-bottom: 14px;
+            text-align: justify;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: revealLine 0.5s ease forwards;
+        }
+
+        .letter-text p:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        .letter-text p:nth-child(2) {
+            animation-delay: 0.7s;
+        }
+
+        .letter-text p:nth-child(3) {
+            animation-delay: 1.0s;
+        }
+
+        .letter-text p:nth-child(4) {
+            animation-delay: 1.3s;
+        }
+
+        .letter-text p:nth-child(5) {
+            animation-delay: 1.6s;
+        }
+
+        .letter-text p:nth-child(6) {
+            animation-delay: 1.9s;
+        }
+
+        @keyframes revealLine {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .letter-text .highlight {
+            color: #e04080;
+            font-weight: 600;
+        }
+
+        .letter-signature {
+            text-align: right;
+            margin-top: 28px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: #e04080;
+            opacity: 0;
+            animation: revealLine 0.5s ease 2.2s forwards;
+        }
+
+        .letter-from {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #cc7090;
+            letter-spacing: 2px;
+            margin-top: 4px;
+            opacity: 0;
+            animation: revealLine 0.5s ease 2.4s forwards;
+        }
+
+        /* Bottom flourish */
+        .letter-border-bottom {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1.5px solid rgba(255, 180, 200, 0.35);
+            opacity: 0;
+            animation: revealLine 0.5s ease 2.6s forwards;
+        }
+
+        .letter-border-bottom .flourish {
+            font-size: 1.2rem;
+            color: #ffb6c1;
+            letter-spacing: 6px;
+        }
+
+        /* CTA Button */
+        .letter-cta {
+            display: block;
+            text-align: center;
+            margin-top: 28px;
+            opacity: 0;
+            animation: revealLine 0.5s ease 2.8s forwards;
+        }
+
+        .goodbye-btn {
+            display: inline-block;
+            padding: 13px 36px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 6px 24px rgba(255, 20, 147, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: floatBtn 3s ease-in-out infinite;
+        }
+
+        @keyframes floatBtn {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .goodbye-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 32px rgba(255, 20, 147, 0.55);
+        }
+
+        .tap-hint {
+            color: #cc5080;
+            font-size: 13px;
+            letter-spacing: 2px;
+            animation: hintPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes hintPulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Close letter button */
+        #closeLetter {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 28px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid rgba(255, 180, 200, 0.5);
+            border-radius: 50px;
+            color: #e04080;
+            font-size: 13px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            z-index: 60;
+            transition: all 0.2s ease;
+        }
+
+        #closeLetter.show {
+            display: block;
+        }
+
+        #closeLetter:hover {
+            background: #ff69b4;
+            color: white;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff69b4, #da70d6);
+            border-radius: 6px;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .welcome h1 {
+                font-size: 2.8rem;
+            }
+
+            .memory-container {
+                grid-template-columns: 1fr;
+            }
+
+            .final-message h2 {
+                font-size: 2.2rem;
+            }
+
+            .letter-paper {
+                padding: 32px 24px 28px;
+            }
+
+            .letter-text p {
+                font-size: 0.98rem;
+                text-align: left;
+            }
+
+            #letterCard {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="fxCanvas"></canvas>
+    <div class="magic-sparkles"></div>
+
+    <div class="floating-hearts">
+        <div class="heart" style="--fd:7s;--dl:0s;--tx:20px">💝</div>
+        <div class="heart" style="--fd:9s;--dl:1.5s;--tx:-30px">💖</div>
+        <div class="heart" style="--fd:8s;--dl:3s;--tx:40px">💗</div>
+        <div class="heart" style="--fd:6s;--dl:4.5s;--tx:-20px">💓</div>
+    </div>
+
+    <section class="welcome">
+        <h1>Những điều anh muốn giữ lại</h1>
+        <p>Mỗi kỷ niệm giữa a và em đều đáng giá với anh, cùng xem lại người yêu anh nhó.</p>
+    </section>
+
+    <div class="memory-container">
+        <div class="memory-card">
+            <div class="img-wrapper"><img src="../images/d4.jpg" alt="Memory" class="memory-img"></div>
+            <div class="memory-date">Nụ cười của bé</div>
+            <div class="memory-caption">Bé là người làm a thấy an toàn cũng như hạnh phúc nhất khi ở cạnh ❤️</div>
+        </div>
+        <div class="memory-card">
+            <div class="img-wrapper"><img src="../images/d2.jpg" alt="Memory" class="memory-img"></div>
+            <div class="memory-date">Vibes tông hồng đồ đóa</div>
+            <div class="memory-caption">Mặc dù chúng ta khác nhau nhiều nhưng mà trái dấu mới hút nhau nè 😊💕</div>
+        </div>
+        <div class="memory-card">
+            <div class="img-wrapper"><img src="../images/d3.jpg" alt="Memory" class="memory-img"></div>
+            <div class="memory-date">Trái tim ấm áp</div>
+            <div class="memory-caption">Chúng ta cũng đã trải qua nhiều sóng gió với nhau rùi, a mong em mãi đáng iu vậy
+                nhá và iu anhhh. 🌸💖</div>
+        </div>
+    </div>
+
+    <section class="final-message">
+        <h2>Gửi em 💙</h2>
+
+        <div class="letter-trigger">
+            <!-- Card button (shown before open) -->
+            <div id="letterCard" onclick="openLetter()">
+                <div class="card-body">
+                    <div class="card-seal">💌</div>
+                    <div class="card-label">Thư gửi em</div>
+                    <div class="card-sublabel">tap to open ♥</div>
+                </div>
+            </div>
+            <div class="tap-hint" id="tapHint">✨ Tap để mở thư ✨</div>
+
+            <!-- Full letter (hidden before open) -->
+            <div class="letter-expand" id="letterExpand">
+                <div id="letter">
+                    <div class="letter-paper">
+                        <div class="letter-border-top">
+                            <div class="flourish">— ✿ · ✿ —</div>
+                            <div class="letter-title">Thư gửi em 💌</div>
+                        </div>
+
+                        <div class="letter-text">
+                            <p>Thật ra anh không giỏi nói mấy lời hay ho lắm nên anh chỉ muốn nói đơn giản thôi.</p>
+                            <p>Những gì tụi mình đã có với nhau, từ những lần nói chuyện linh tinh, những lúc đi chơi
+                                cùng
+                                nhau, hay chỉ là ở cạnh nhau thôi… với anh <span class="highlight">đều rất đáng
+                                    nhớ</span>.
+                                💫</p>
+                            <p>Em là người làm anh thấy thoải mái, thấy vui, và đôi khi chỉ cần nghĩ tới em thôi là cũng
+                                đủ
+                                thấy ngày hôm đó ổn hơn rồi.</p>
+                            <p>Sinh nhật em, anh không biết chúc gì cho hay nữa… chỉ mong em <span
+                                    class="highlight">luôn
+                                    vui vẻ</span>, luôn là chính em, và làm những điều em thích.</p>
+                            <p>Nếu có lúc nào em thấy mệt hay không ổn, thì nhớ là vẫn có anh ở đây — <span
+                                    class="highlight">không cần phải mạnh mẽ một mình đâu</span>. ✨</p>
+                            <p>Cảm ơn em vì đã xuất hiện trong cuộc sống của anh. Và nếu được… anh vẫn muốn mình đi cùng
+                                nhau không cần vội, chỉ cần vẫn là hai đứa mình là được. 💝</p>
+                        </div>
+
+                        <div class="letter-signature">Yêu em forever</div>
+                        <div class="letter-from">— từ anh của em —</div>
+
+                        <div class="letter-border-bottom">
+                            <div class="flourish">— ✿ · ✿ —</div>
+                        </div>
+
+                        <div class="letter-cta">
+                            <a href="#" class="goodbye-btn" onclick="triggerBurst(); return false;">Anh yêu em nhiều
+                                💌</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <button id="closeLetter" onclick="closeLetter()">✿ Đóng thư ✿</button>
+
+    <script>
+        /* ═══════════════════════════════════════
+           LIGHTWEIGHT FX CANVAS
+        ═══════════════════════════════════════ */
+        const fxCanvas = document.getElementById('fxCanvas');
+        const ctx = fxCanvas.getContext('2d');
+        let particles = [];
+
+        function resize() { fxCanvas.width = window.innerWidth; fxCanvas.height = window.innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+
+        // --- Simple heart shape ---
+        function drawHeart(x, y, size, color, alpha) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x, y + size * 0.3);
+            ctx.bezierCurveTo(x - size / 2, y - size * 0.3, x - size, y + size * 0.1, x, y + size);
+            ctx.bezierCurveTo(x + size, y + size * 0.1, x + size / 2, y - size * 0.3, x, y + size * 0.3);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // --- Simple flower ---
+        function drawFlower(x, y, size, color, alpha, rotation) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            const petals = 6;
+            for (let i = 0; i < petals; i++) {
+                ctx.save();
+                ctx.rotate((i / petals) * Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.ellipse(0, -size * 0.55, size * 0.3, size * 0.55, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            ctx.fillStyle = '#fff5d0';
+            ctx.beginPath(); ctx.arc(0, 0, size * 0.22, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        // --- Firework dot ---
+        function drawDot(x, y, size, color, alpha) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = color;
+            ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        function spawnBurst(x, y) {
+            const hColors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffd700', '#ff85a2', '#ff6b81', '#da70d6'];
+            const fColors = ['#ff69b4', '#ffb6c1', '#ff85a2', '#ffd700', '#ffffff', '#f8b500'];
+
+            // Firework sparks
+            for (let i = 0; i < 35; i++) {
+                const angle = (i / 35) * Math.PI * 2;
+                const speed = 1.5 + Math.random() * 3;
+                particles.push({
+                    type: 'dot', x, y,
+                    vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                    size: 1.5 + Math.random() * 2,
+                    color: fColors[Math.floor(Math.random() * fColors.length)],
+                    alpha: 1, decay: 0.025 + Math.random() * 0.015,
+                    gravity: 0.04,
+                });
+            }
+
+            // Hearts
+            for (let i = 0; i < 6; i++) {
+                const angle = Math.random() * Math.PI;
+                particles.push({
+                    type: 'heart', x, y,
+                    vx: (Math.random() - 0.5) * 3, vy: -2 - Math.random() * 3,
+                    size: 10 + Math.random() * 14,
+                    color: hColors[Math.floor(Math.random() * hColors.length)],
+                    alpha: 1, decay: 0.012, gravity: 0.05,
+                    rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.08,
+                });
+            }
+
+            // Flowers
+            for (let i = 0; i < 5; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 30 + Math.random() * 60;
+                particles.push({
+                    type: 'flower', x, y,
+                    toX: x + Math.cos(angle) * dist, toY: y + Math.sin(angle) * dist - 30,
+                    progress: 0, speed: 0.03 + Math.random() * 0.02,
+                    size: 8 + Math.random() * 10,
+                    color: fColors[Math.floor(Math.random() * fColors.length)],
+                    alpha: 1, rot: Math.random() * Math.PI * 2,
+                    rotSpeed: (Math.random() - 0.5) * 0.06, gravity: 0.015, vy: 0,
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+            particles = particles.filter(p => p.alpha > 0.02);
+
+            particles.forEach(p => {
+                if (p.type === 'dot') {
+                    p.x += p.vx; p.y += p.vy;
+                    p.vy += p.gravity; p.vx *= 0.98;
+                    p.alpha -= p.decay;
+                    drawDot(p.x, p.y, p.size, p.color, p.alpha);
+
+                } else if (p.type === 'heart') {
+                    p.x += p.vx; p.y += p.vy;
+                    p.vy += p.gravity; p.vx *= 0.98;
+                    p.rot += p.rotSpeed;
+                    p.alpha -= p.decay;
+                    drawHeart(p.x, p.y, p.size, p.color, p.alpha);
+
+                } else if (p.type === 'flower') {
+                    if (p.progress < 1) {
+                        p.progress += p.speed;
+                        const t = 1 - Math.pow(1 - p.progress, 3);
+                        p.x = lerp(p.x, p.toX, t);
+                        p.y = lerp(p.y, p.toY, t);
+                    } else {
+                        p.y += p.vy; p.vy += p.gravity;
+                    }
+                    p.rot += p.rotSpeed;
+                    p.alpha -= 0.006;
+                    drawFlower(p.x, p.y, p.size, p.color, Math.max(0, p.alpha), p.rot);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
+
+        function scheduleBursts() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = 80 + Math.random() * (fxCanvas.width - 160);
+                    const y = 60 + Math.random() * (fxCanvas.height * 0.4);
+                    spawnBurst(x, y);
+                }, i * 350);
+            }
+        }
+
+        /* ═══════════════════════════════════════
+           LETTER LOGIC
+        ═══════════════════════════════════════ */
+        let opened = false;
+
+        function openLetter() {
+            if (opened) return;
+            opened = true;
+
+            const card = document.getElementById('letterCard');
+            const letter = document.getElementById('letter');
+            const letterWrap = document.getElementById('letterExpand');
+            const hint = document.getElementById('tapHint');
+            const closeBtn = document.getElementById('closeLetter');
+
+            hint.style.transition = 'opacity 0.3s';
+            hint.style.opacity = '0';
+
+            // Burst at card center
+            const rect = card.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => spawnBurst(cx + (Math.random() - 0.5) * 180, cy + (Math.random() - 0.5) * 80), i * 100);
+            }
+
+            // Fade out card
+            card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            card.style.pointerEvents = 'none';
+
+            // Open: expand wrapper, then animate letter content
+            setTimeout(() => {
+                // Reset letter animations so they replay each open
+                letter.querySelectorAll('p, .letter-signature, .letter-from, .letter-border-bottom, .letter-cta').forEach(el => {
+                    el.style.animation = 'none';
+                    void el.offsetWidth;
+                    el.style.animation = '';
+                });
+
+                letterWrap.classList.add('revealed');
+                letter.classList.add('revealed');
+                closeBtn.classList.add('show');
+
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => {
+                        spawnBurst(window.innerWidth / 2 + (Math.random() - 0.5) * 500, 180 + Math.random() * 100);
+                    }, 250 + i * 200);
+                }
+                setTimeout(scheduleBursts, 650);
+            }, 380);
+        }
+
+        function closeLetter() {
+            const letter = document.getElementById('letter');
+            const letterWrap = document.getElementById('letterExpand');
+            const card = document.getElementById('letterCard');
+            const hint = document.getElementById('tapHint');
+            const closeBtn = document.getElementById('closeLetter');
+
+            closeBtn.classList.remove('show');
+
+            // Close: letter shrinks away, then wrapper collapses, card fades back in
+            letter.classList.remove('revealed');
+
+            setTimeout(() => {
+                letterWrap.classList.remove('revealed');
+                // Fade card back in
+                card.style.transition = 'opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s';
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
+                card.style.pointerEvents = 'auto';
+                hint.style.opacity = '1';
+                opened = false;
+            }, 520);
+        }
+
+        function triggerBurst() {
+            const x = window.innerWidth / 2;
+            const y = window.innerHeight / 2;
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => spawnBurst(x + (Math.random() - 0.5) * 300, y + (Math.random() - 0.5) * 200), i * 80);
+            }
+        }
+    </script>
+</body>
+
+</html>

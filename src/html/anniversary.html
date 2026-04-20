@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hành trình của hai đứa 💕</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="../css/anniversary.css">
+</head>
+
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Rose Petals -->
+    <div class="petals-container" id="petalsContainer"></div>
+
+    <!-- Map Background -->
+    <div class="map-bg">
+        <div class="map-content">
+            <!-- Title -->
+            <div class="title-section">
+                <h1 class="main-title">Hành trình của hai đứa 💕</h1>
+                <p class="subtitle">Every moment with you is precious ✨</p>
+            </div>
+
+            <!-- Roadmap Container -->
+            <div class="roadmap" id="roadmap">
+                <!-- Nodes will be positioned via CSS -->
+                <svg class="paths-svg" id="pathsSvg"></svg>
+
+                <div class="node" id="node1" data-info="1">
+                    <div class="node-icon">🌟</div>
+                    <div class="node-label">Ngày đầu tiên</div>
+                </div>
+
+                <div class="node" id="node2" data-info="2">
+                    <div class="node-icon">💕</div>
+                    <div class="node-label">Lời yêu đầu tiên</div>
+                </div>
+
+                <div class="node" id="node3" data-info="3">
+                    <div class="node-icon">🎉</div>
+                    <div class="node-label">Những buổi đi chơi</div>
+                </div>
+
+                <div class="node" id="node4" data-info="4">
+                    <div class="node-icon">🎂</div>
+                    <div class="node-label">Sinh nhật đầu</div>
+                </div>
+
+                <div class="node" id="node5" data-info="5">
+                    <div class="node-icon">💖</div>
+                    <div class="node-label">100 ngày bên nhau</div>
+                </div>
+
+                <div class="node" id="node6" data-info="6">
+                    <div class="node-icon">✈️</div>
+                    <div class="node-label">Chuyến đi đầu</div>
+                </div>
+
+                <div class="node" id="node7" data-info="7">
+                    <div class="node-icon">🍳</div>
+                    <div class="node-label">Lần đầu nấu ăn</div>
+                </div>
+
+                <div class="node" id="node8" data-info="8">
+                    <div class="node-icon">🎬</div>
+                    <div class="node-label">Xem phim cùng nhau</div>
+                </div>
+
+                <div class="node" id="node9" data-info="9">
+                    <div class="node-icon">👨‍👩‍👧</div>
+                    <div class="node-label">Gặp gia đình</div>
+                </div>
+
+                <div class="node" id="node10" data-info="10">
+                    <div class="node-icon">💍</div>
+                    <div class="node-label">Kỷ niệm 1 năm</div>
+                </div>
+
+                <div class="node" id="node11" data-info="11">
+                    <div class="node-icon">🌙</div>
+                    <div class="node-label">Đêm trăng đầu</div>
+                </div>
+
+                <div class="node" id="node12" data-info="12">
+                    <div class="node-icon">💝</div>
+                    <div class="node-label">Tương lai</div>
+                </div>
+            </div>
+
+            <!-- Popup Card -->
+            <div class="popup-card" id="popupCard">
+                <button class="popup-close" id="popupClose">×</button>
+                <div class="popup-image">
+                    <img src="" alt="" id="popupImage">
+                </div>
+                <div class="popup-content">
+                    <h3 class="popup-title" id="popupTitle"></h3>
+                    <p class="popup-desc" id="popupDesc"></p>
+                </div>
+            </div>
+
+            <!-- Continue Button -->
+            <div class="continue-section">
+                <button class="continue-btn" id="continueBtn">
+                    Continue 💖
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/anniversary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffe6e6 0%, #fff5f5 25%, #fff0f5 50%, #ffe6f0 75%, #ffd9e6 100%);
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    font-family: 'Quicksand', sans-serif;
+    overflow-x: hidden;
+    padding: 2rem;
+    position: relative;
+}
+
+/* Floating Hearts Background */
+.hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floating-heart {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    animation: floatHeart 8s ease-in-out infinite;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Rose Petals */
+.petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.petal {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+    border-radius: 50% 0 50% 50%;
+    opacity: 0.7;
+    animation: fallPetal 10s linear infinite;
+}
+
+@keyframes fallPetal {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Main Profile Card */
+.profile-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
+    position: relative;
+    z-index: 10;
+    border: 2px solid rgba(255, 182, 193, 0.3);
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hero-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    color: #ff69b4;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Profile Header */
+.profile-header {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Photo Frame */
+.photo-frame {
+    position: relative;
+    padding: 15px 15px 40px 15px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease;
+}
+
+.photo-frame:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+}
+
+.photo-hearts {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+}
+
+/* Basic Info */
+.basic-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.name {
+    font-family: 'Bubblegum Sans', cursive;
+    font-size: 2rem;
+    color: #ff69b4;
+    margin-bottom: 0.3rem;
+}
+
+.nickname {
+    font-size: 1.1rem;
+    color: #e84393;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.quick-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.fact-icon {
+    font-size: 1.2rem;
+}
+
+.fact-label {
+    color: #666;
+}
+
+.fact-value {
+    color: #ff69b4;
+    font-weight: 600;
+}
+
+/* Section */
+.section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed rgba(255, 105, 180, 0.3);
+}
+
+.section-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: #ff69b4;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/* Habits Grid */
+.habits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.habit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #fff5f5, #ffe6f0);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.habit-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+    background: linear-gradient(135deg, #ffe6f0, #ffd9e6);
+}
+
+.habit-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.habit-text {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Love Note */
+.love-note {
+    background: linear-gradient(135deg, #fff5f5, #ffe6f0);
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+    position: relative;
+}
+
+.love-note::before {
+    content: '💕';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+}
+
+.love-note p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #4a4a4a;
+    font-style: italic;
+}
+
+/* Continue Button */
+.continue-section {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.continue-btn {
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #ff69b4, #ff1493);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+    transition: all 0.3s ease;
+    animation: bounce 2s ease infinite;
+}
+
+.continue-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(255, 105, 180, 0.6);
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+
+    .profile-card {
+        padding: 1.5rem;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .name {
+        font-size: 1.5rem;
+    }
+
+    .habits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
