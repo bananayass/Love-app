@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhạc của bé 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #fce7f3 0%, #fbcfe8 40%, #f9a8d4 70%, #f472b6 100%);
+      font-family: 'Quicksand', sans-serif;
+      color: #831843;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 100px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Ambient glow blobs ── */
+    .blob {
+      position: fixed; border-radius: 50%; filter: blur(80px);
+      pointer-events: none; z-index: 0;
+    }
+    .blob-1 { width: 400px; height: 400px; top: -150px; left: -100px; background: rgba(244, 114, 182, 0.25); }
+    .blob-2 { width: 350px; height: 350px; bottom: -100px; right: -80px; background: rgba(236, 72, 153, 0.2); }
+    .blob-3 { width: 250px; height: 250px; top: 40%; left: 60%; background: rgba(251, 207, 232, 0.3); }
+
+    /* ── Floating music notes ── */
+    .music-note {
+      position: fixed;
+      font-size: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatNote 7s ease-in-out infinite;
+      color: rgba(236, 72, 153, 0.65);
+    }
+    @keyframes floatNote {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.5); }
+      12%  { opacity: 0.8; }
+      85%  { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(-130px) rotate(30deg) scale(1); }
+    }
+    /* Notes speed up when playing */
+    .listening .music-note { animation-duration: 4s; }
+
+    /* ── Wave rings (always subtle, stronger when playing) ── */
+    .wave-ring {
+      position: fixed;
+      border-radius: 50%;
+      border: 2px solid rgba(232, 121, 249, 0.25);
+      pointer-events: none;
+      z-index: 1;
+      animation: waveExpand 4s ease-out infinite;
+    }
+    @keyframes waveExpand {
+      0%   { width: 20px; height: 20px; opacity: 0.6; transform: translate(-50%, -50%); }
+      100% { width: 280px; height: 280px; opacity: 0; transform: translate(-50%, -50%); }
+    }
+    .listening .wave-ring { animation-duration: 2.5s; border-color: rgba(232, 121, 249, 0.5); }
+
+    /* Header */
+    .header { position: relative; z-index: 10; text-align: center; margin-bottom: 16px; }
+    .header-title {
+      font-family: 'Dancing Script', cursive; font-size: 3rem;
+      color: #be185d;
+      text-shadow: 0 2px 16px rgba(190, 24, 93, 0.2);
+      margin-bottom: 4px;
+    }
+    .header-sub { font-size: 0.85rem; color: rgba(190, 24, 93, 0.55); letter-spacing: 3px; }
+
+    /* ── Side equalizers ── */
+    .side-eq {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .side-eq.left  { left: 8px; }
+    .side-eq.right { right: 8px; }
+    .side-bar {
+      width: 7px;
+      border-radius: 4px;
+      background: linear-gradient(to top, #ec4899, #f9a8d4);
+      animation: sideBounce 0.9s ease-in-out infinite alternate;
+    }
+    @keyframes sideBounce {
+      from { height: 8px; opacity: 0.4; }
+      to   { height: var(--h); opacity: 0.85; }
+    }
+    /* Side EQ intensifies when listening */
+    .listening .side-bar { animation-duration: 0.5s; }
+    .listening .side-bar:nth-child(odd)  { background: linear-gradient(to top, #be185d, #f9a8d4); }
+    .listening .side-bar:nth-child(even) { background: linear-gradient(to top, #f472b6, #fbcfe8); }
+
+    /* Main layout: record deck + visualizer */
+    .top-section {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Sound listening visualizer ── */
+    .sound-viz {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 36px;
+      margin-bottom: 10px;
+    }
+    .viz-bar {
+      width: 5px;
+      border-radius: 3px;
+      background: linear-gradient(to top, #ec4899, #f9a8d4, #fbcfe8);
+      animation: vizPulse 0.7s ease-in-out infinite alternate;
+    }
+    @keyframes vizPulse {
+      from { height: 6px; }
+      to   { height: var(--vh); }
+    }
+    .viz-bar:nth-child(1)  { --vh: 14px; animation-delay: 0s; }
+    .viz-bar:nth-child(2)  { --vh: 22px; animation-delay: 0.05s; }
+    .viz-bar:nth-child(3)  { --vh: 32px; animation-delay: 0.1s; }
+    .viz-bar:nth-child(4)  { --vh: 26px; animation-delay: 0.05s; }
+    .viz-bar:nth-child(5)  { --vh: 18px; animation-delay: 0.15s; }
+    .viz-bar:nth-child(6)  { --vh: 30px; animation-delay: 0.08s; }
+    .viz-bar:nth-child(7)  { --vh: 20px; animation-delay: 0.12s; }
+    .viz-bar:nth-child(8)  { --vh: 28px; animation-delay: 0.03s; }
+    .viz-bar:nth-child(9)  { --vh: 16px; animation-delay: 0.18s; }
+    .viz-bar:nth-child(10) { --vh: 24px; animation-delay: 0.07s; }
+    .viz-bar:nth-child(11) { --vh: 12px; animation-delay: 0.14s; }
+    .viz-bar:nth-child(12) { --vh: 20px; animation-delay: 0.02s; }
+    .viz-bar:nth-child(13) { --vh: 30px; animation-delay: 0.11s; }
+    .viz-bar:nth-child(14) { --vh: 18px; animation-delay: 0.06s; }
+    .viz-bar:nth-child(15) { --vh: 26px; animation-delay: 0.09s; }
+    .viz-idle .viz-bar { animation: none; height: 6px; }
+
+    /* ── Pulsing deck glow ring ── */
+    .deck-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 3px solid rgba(236, 72, 153, 0);
+      z-index: 0;
+      pointer-events: none;
+      transition: border-color 0.3s;
+    }
+    .listening .deck-glow {
+      border-color: rgba(236, 72, 153, 0.4);
+      animation: deckPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes deckPulse {
+      0%   { width: 200px; height: 200px; opacity: 1; }
+      50%  { width: 240px; height: 240px; opacity: 0.5; }
+      100% { width: 200px; height: 200px; opacity: 1; }
+    }
+
+    /* ── Heartbeat text animation when playing ── */
+    .listening .deck-title {
+      animation: heartBeat 1s ease-in-out infinite;
+    }
+    @keyframes heartBeat {
+      0%   { transform: scale(1); }
+      15%  { transform: scale(1.05); }
+      30%  { transform: scale(1); }
+      45%  { transform: scale(1.03); }
+      60%  { transform: scale(1); }
+    }
+
+    /* ── Speaker bars ── */
+    .listening .sp-bar { animation-duration: 0.5s !important; }
+
+    /* Main container */
+    .main-wrap { position: relative; z-index: 10; width: 100%; max-width: 480px; }
+
+    /* Player card */
+    .player-card {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 28px;
+      padding: 24px 20px;
+      box-shadow: 0 8px 40px rgba(190, 24, 93, 0.12);
+    }
+
+    /* ── Record deck ── */
+    .record-deck {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .record-arm {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin-bottom: 12px;
+    }
+
+    /* Platter */
+    .platter {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fdf2f8, #fce7f3);
+      position: absolute;
+      inset: 0;
+      box-shadow: 0 4px 24px rgba(190, 24, 93, 0.15), inset 0 2px 8px rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .record {
+      width: 172px;
+      height: 172px;
+      border-radius: 50%;
+      position: relative;
+      animation: spin 0s linear infinite;
+    }
+    .record.playing { animation-duration: 2s; }
+
+    /* Vinyl disc */
+    .record-disc {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+    .disc-art {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+    /* Grooves + sheen */
+    .record-disc::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at center, transparent 24px, rgba(0,0,0,0.09) 25px, rgba(0,0,0,0.09) 26px, transparent 27px),
+        linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+      pointer-events: none;
+    }
+
+    /* Spindle hole */
+    .record-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      background: #fdf2f8;
+      border: 2px solid #f472b6;
+      z-index: 3;
+      box-shadow: 0 0 6px rgba(244, 114, 182, 0.5);
+    }
+
+    /* Tonearm */
+    .tonearm {
+      position: absolute;
+      top: 2px; right: -2px;
+      width: 88px; height: 88px;
+      pointer-events: none;
+      transform-origin: 90% 10%;
+      transform: rotate(-30deg);
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .record.playing .tonearm { transform: rotate(0deg); }
+    .tonearm svg { width: 100%; height: 100%; }
+
+    /* Deck info */
+    .deck-info { text-align: center; }
+    .deck-title {
+      font-size: 0.95rem; font-weight: 700;
+      color: #be185d;
+      margin-bottom: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;
+    }
+    .deck-artist { font-size: 0.72rem; color: rgba(190, 24, 93, 0.6); }
+
+    /* ── Speaker stack ── */
+    .speaker-stack {
+      display: flex;
+      gap: 3px;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 8px;
+      height: 22px;
+    }
+    .sp-bar {
+      width: 4px;
+      background: linear-gradient(to top, #ec4899, #f9a8d4);
+      border-radius: 2px;
+      animation: spPulse 0.8s ease-in-out infinite alternate;
+    }
+    .sp-bar:nth-child(1) { --sp-h: 10px; animation-delay: 0s; }
+    .sp-bar:nth-child(2) { --sp-h: 16px; animation-delay: 0.08s; }
+    .sp-bar:nth-child(3) { --sp-h: 22px; animation-delay: 0.16s; }
+    .sp-bar:nth-child(4) { --sp-h: 16px; animation-delay: 0.08s; }
+    .sp-bar:nth-child(5) { --sp-h: 10px; animation-delay: 0s; }
+    @keyframes spPulse {
+      from { height: 5px; }
+      to   { height: var(--sp-h); }
+    }
+    .viz-idle ~ .player-card .sp-bar { animation: none; height: 5px; }
+
+    /* Spotify iframe */
+    .spotify-player {
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      min-height: 152px;
+      display: none;
+    }
+    .spotify-player.active { display: block; }
+    .spotify-player iframe { width: 100%; height: 152px; border: none; display: block; }
+
+    /* Category pills */
+    .cat-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .cat-btn {
+      padding: 6px 18px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(219, 39, 119, 0.25);
+      border-radius: 20px;
+      color: rgba(190, 24, 93, 0.8);
+      font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+      font-family: 'Quicksand', sans-serif; font-weight: 600;
+    }
+    .cat-btn:hover { background: rgba(219, 39, 119, 0.12); color: #be185d; }
+    .cat-btn.active {
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+      border-color: transparent; color: #fff;
+      box-shadow: 0 2px 12px rgba(236, 72, 153, 0.4);
+    }
+
+    /* Track list */
+    .track-list { display: flex; flex-direction: column; gap: 8px; }
+    .track-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(219, 39, 119, 0.12);
+      border-radius: 14px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .track-item:hover {
+      background: rgba(236, 72, 153, 0.1);
+      border-color: rgba(236, 72, 153, 0.35);
+    }
+    .track-item.active {
+      background: rgba(236, 72, 153, 0.18);
+      border-color: rgba(236, 72, 153, 0.55);
+    }
+    .track-thumb {
+      width: 44px; height: 44px; border-radius: 10px; overflow: hidden; flex-shrink: 0;
+      background: rgba(219, 39, 119, 0.08);
+    }
+    .track-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .track-info { flex: 1; min-width: 0; }
+    .track-title {
+      font-size: 0.86rem; color: #831843; font-weight: 700;
+      margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .track-artist { font-size: 0.7rem; color: rgba(131, 24, 67, 0.6); }
+    .track-badge {
+      width: 24px; height: 24px;
+      background: linear-gradient(135deg, #ec4899, #f472b6);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; flex-shrink: 0;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .track-item.active .track-badge { opacity: 1; }
+
+    /* Heart deco */
+    .heart-deco { text-align: center; margin-top: 16px; font-size: 1rem; letter-spacing: 6px; opacity: 0.45; }
+
+    /* Next link */
+    .next-link {
+      position: fixed; bottom: 28px; right: 28px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(219, 39, 119, 0.3);
+      border-radius: 50px; color: #be185d;
+      text-decoration: none; font-size: 0.82rem; letter-spacing: 1px;
+      transition: all 0.3s; z-index: 20;
+      backdrop-filter: blur(8px);
+    }
+    .next-link:hover { background: rgba(236, 72, 153, 0.2); color: #be185d; border-color: rgba(236, 72, 153, 0.45); }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 500px) {
+      .header-title { font-size: 2.4rem; }
+      .record-arm, .platter, .record { width: 150px; height: 150px; }
+      .tonearm { width: 72px; height: 72px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Floating music notes -->
+  <div id="musicNotes"></div>
+
+  <!-- Wave rings -->
+  <div id="waveRings"></div>
+
+  <!-- Left EQ bars -->
+  <div class="side-eq left" id="eqLeft"></div>
+
+  <!-- Right EQ bars -->
+  <div class="side-eq right" id="eqRight"></div>
+
+  <div class="header">
+    <div class="header-title">Nhạc của bé 💕</div>
+    <div class="header-sub">playlist anh viết cho em</div>
+  </div>
+
+  <div class="top-section">
+    <!-- Sound visualizer (listening animation) -->
+    <div class="sound-viz viz-idle" id="soundViz"></div>
+
+    <div class="main-wrap">
+      <div class="player-card">
+
+        <!-- Record deck -->
+        <div class="record-deck">
+          <div class="record-arm">
+            <div class="deck-glow"></div>
+            <div class="platter">
+              <div class="record" id="record">
+                <div class="record-disc">
+                  <img class="disc-art" src="../images/d1.jpg" alt="Album art">
+                </div>
+                <div class="record-center"></div>
+              </div>
+            </div>
+            <div class="tonearm">
+              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="96" cy="14" r="10" fill="#f9a8d4"/>
+                <circle cx="96" cy="14" r="5" fill="#ec4899"/>
+                <rect x="91" y="14" width="5" height="68" rx="2.5" fill="#ec4899" transform="rotate(-4 91 14)"/>
+                <rect x="88" y="80" width="10" height="15" rx="3" fill="#fbcfe8" transform="rotate(-4 88 80)"/>
+                <rect x="86" y="91" width="14" height="8" rx="2" fill="#f9a8d4"/>
+                <circle cx="93" cy="101" r="2.5" fill="#be185d"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Speaker bars -->
+          <div class="speaker-stack">
+            <div class="sp-bar"></div>
+            <div class="sp-bar"></div>
+            <div class="sp-bar"></div>
+            <div class="sp-bar"></div>
+            <div class="sp-bar"></div>
+          </div>
+
+          <div class="deck-info">
+            <div class="deck-title" id="deckTitle">Chọn bài hát yêu thích của em nào</div>
+            <div class="deck-artist" id="deckArtist">💕 playlist của bé</div>
+          </div>
+        </div>
+
+        <!-- Spotify embed -->
+        <div class="spotify-player" id="spotifyPlayer">
+          <iframe id="spotifyIframe" src="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify"></iframe>
+        </div>
+
+        <!-- Category filter -->
+        <div class="cat-row">
+          <button class="cat-btn active" data-cat="all">Tất cả</button>
+          <button class="cat-btn" data-cat="love">Yêu</button>
+          <button class="cat-btn" data-cat="chill">Chill</button>
+          <button class="cat-btn" data-cat="sweet">Ngọt</button>
+          <button class="cat-btn" data-cat="sad">Buồn</button>
+        </div>
+
+        <!-- Track list -->
+        <div class="track-list" id="trackList"></div>
+
+        <div class="heart-deco">💗 💗 💗</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="cause.html" class="next-link">💌 Thư tình anh →</a>
+
+  <script>
+    // ── Floating music notes (25) ──
+    var noteSymbols = ['♪', '♫', '♬', '🎵', '🎶'];
+    var notesContainer = document.getElementById('musicNotes');
+    for (var n = 0; n < 25; n++) {
+      var note = document.createElement('div');
+      note.className = 'music-note';
+      note.textContent = noteSymbols[n % noteSymbols.length];
+      note.style.left = (2 + Math.random() * 96) + '%';
+      note.style.top  = (20 + Math.random() * 70) + '%';
+      note.style.animationDelay    = (Math.random() * 7) + 's';
+      note.style.animationDuration = (5 + Math.random() * 4) + 's';
+      note.style.fontSize = (0.75 + Math.random() * 0.85) + 'rem';
+      notesContainer.appendChild(note);
+    }
+
+    // ── Sound visualizer bars ──
+    var vizContainer = document.getElementById('soundViz');
+    for (var v = 0; v < 15; v++) {
+      var bar = document.createElement('div');
+      bar.className = 'viz-bar';
+      vizContainer.appendChild(bar);
+    }
+
+    // ── Side EQ bars ──
+    function buildSideEQ(container, count) {
+      for (var i = 0; i < count; i++) {
+        var bar = document.createElement('div');
+        bar.className = 'side-bar';
+        var h = 10 + Math.random() * 50;
+        bar.style.setProperty('--h', h + 'px');
+        bar.style.height = '10px';
+        bar.style.animationDelay    = (Math.random() * 0.9) + 's';
+        bar.style.animationDuration = (0.5 + Math.random() * 0.7) + 's';
+        container.appendChild(bar);
+      }
+    }
+    buildSideEQ(document.getElementById('eqLeft'), 12);
+    buildSideEQ(document.getElementById('eqRight'), 12);
+
+    // ── Wave rings (always running, faster when listening) ──
+    var waveContainer = document.getElementById('waveRings');
+    var waveInterval;
+    function spawnWave() {
+      var ring = document.createElement('div');
+      ring.className = 'wave-ring';
+      ring.style.left = '50%';
+      ring.style.top  = '50%';
+      ring.style.animationDuration = (2.5 + Math.random() * 1.5) + 's';
+      waveContainer.appendChild(ring);
+      setTimeout(function() { ring.remove(); }, 4000);
+    }
+    waveInterval = setInterval(spawnWave, 900);
+
+    // ── Tracks (15 songs, correct titles from Spotify) ──
+    var tracks = [
+      { title: "Gps (Remix)", artist: "Nidebig, ybapurr, binqang, hs.lilyafuu", embedUrl: "https://open.spotify.com/embed/track/0z5X0uPlHtqVi0TaQUGaBv?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e024ef2d77f52d2f1e49f6f3b0b", category: "chill" },
+      { title: "bồ em", artist: "DÍNH", embedUrl: "https://open.spotify.com/embed/track/7eBsnbBBaPJuhxcoJwsK3P?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02c19fe92cd570807c3209d410", category: "love" },
+      { title: "Thích Em Hơi Nhiều", artist: "Wren Evans", embedUrl: "https://open.spotify.com/embed/track/45Mswno1F7FoZkcmQkp7fi?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0208c808810a37c9a04f88cca1", category: "sweet" },
+      { title: "Ooh Just You", artist: "Lê Thiện Hiếu", embedUrl: "https://open.spotify.com/embed/track/41qCPMY2yhelj8Dubjjft7?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e022d350c9ee8dc1f4d362798dd", category: "chill" },
+      { title: "Hông Về Tình Iu", artist: "Khoi Vu", embedUrl: "https://open.spotify.com/embed/track/5BOFFL7w8uIMmz7pCSNgvK?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e027c5864ed487937ae6b35e14e", category: "sad" },
+      { title: "Tay To", artist: "Rapital, RPT MCK, Phongkhin", embedUrl: "https://open.spotify.com/embed/track/41aMYNen9G7uUbqLfV65cF?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0212d1cd6726c32388ed77c402", category: "chill" },
+      { title: "GETCHA LOVE", artist: "Mable, VDT, SnowzyBoy", embedUrl: "https://open.spotify.com/embed/track/2H9ZjZhbHWyXHiOwYrbOnH?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0205ca5c14c06fa07689a8b4c8", category: "love" },
+      { title: "Ai Đưa Em Về", artist: "TIA, Lê Thiện Hiếu", embedUrl: "https://open.spotify.com/embed/track/39TAKt2hL8sdhVTFCNfm2Y?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e021f44a0670a8fe17ee8acba15", category: "love" },
+      { title: "Muốn Được Cùng Em", artist: "Freaky, GAI", embedUrl: "https://open.spotify.com/embed/track/5SWF7kfBZVGLqfUlnq3G3h?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e020a896d6f9b67f742745dcf8e", category: "sweet" },
+      { title: "Yêu 5", artist: "Rhymastic", embedUrl: "https://open.spotify.com/embed/track/5U30iZBlmxkpHqzb1OSnBS?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02d085c32d050bc832a8075ce6", category: "love" },
+      { title: "Giấc Mơ Rất Thơ", artist: "Mer, thaison!", embedUrl: "https://open.spotify.com/embed/track/0xMIMrT7Vmwsejznw8LJAE?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02b0744618cb4862f497a314f4", category: "sweet" },
+      { title: "When You Look at Me", artist: "Obito, Seachains", embedUrl: "https://open.spotify.com/embed/track/6kDeCSj6MUvUSiwirbCERV?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02226caa35c3bb2149bbc09b12", category: "chill" },
+      { title: "Hướng Dương", artist: "Changg", embedUrl: "https://open.spotify.com/embed/track/65uxT4ZGe6eOABj1g5V2Fj?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0230ad4af2a51dfd2e4dc5550f", category: "love" },
+      { title: "Matchanah", artist: "Híu", embedUrl: "https://open.spotify.com/embed/track/0l5rDugLBEOGS6L77GPsaT?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e020edfb39536c6bd64efefbb09", category: "chill" },
+      { title: "Tình Ca Tình Ta", artist: "kis", embedUrl: "https://open.spotify.com/embed/track/4I2ne5vm5LJmrXAfqgjAG4?utm_source=generator", thumbnail: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02f3e649671639abc13cff4876", category: "sweet" }
+    ];
+
+    var currentCat = 'all';
+    var currentTrack = null;
+
+    function renderTracks() {
+      var filtered = currentCat === 'all' ? tracks : tracks.filter(function(t) { return t.category === currentCat; });
+      var html = '';
+      for (var i = 0; i < filtered.length; i++) {
+        var t = filtered[i];
+        var safeEmbed = encodeURIComponent(t.embedUrl);
+        var isActive = currentTrack && currentTrack.title === t.title ? ' active' : '';
+        html += '<div class="track-item' + isActive + '" data-embed="' + safeEmbed + '" data-title="' + encodeURIComponent(t.title) + '" data-artist="' + encodeURIComponent(t.artist) + '" onclick="playTrack(this)">' +
+          '<div class="track-thumb"><img src="' + t.thumbnail + '" alt="' + t.title + '" onerror="this.style.display=\'none\'"></div>' +
+          '<div class="track-info"><div class="track-title">' + t.title + '</div><div class="track-artist">' + t.artist + '</div></div>' +
+          '<div class="track-badge">▶</div></div>';
+      }
+      document.getElementById('trackList').innerHTML = html;
+    }
+
+    function playTrack(el) {
+      var embedUrl = decodeURIComponent(el.getAttribute('data-embed'));
+      var title   = decodeURIComponent(el.getAttribute('data-title'));
+      var artist  = decodeURIComponent(el.getAttribute('data-artist'));
+
+      // Toggle stop: clicking same active track stops playback
+      if (currentTrack && currentTrack.title === title) {
+        stopPlayback();
+        return;
+      }
+
+      // Start playback
+      document.getElementById('deckTitle').textContent  = title;
+      document.getElementById('deckArtist').textContent = artist;
+
+      document.body.classList.add('listening');
+
+      var record = document.getElementById('record');
+      record.classList.add('playing');
+
+      var viz = document.getElementById('soundViz');
+      viz.classList.remove('viz-idle');
+
+      clearInterval(waveInterval);
+      waveInterval = setInterval(spawnWave, 600);
+
+      var sp = document.getElementById('spotifyPlayer');
+      sp.classList.add('active');
+      document.getElementById('spotifyIframe').src = embedUrl;
+
+      var items = document.querySelectorAll('.track-item');
+      for (var i = 0; i < items.length; i++) { items[i].classList.remove('active'); }
+      el.classList.add('active');
+      currentTrack = { title: title };
+    }
+
+    function stopPlayback() {
+      // Remove all listening animations → returns to idle
+      document.body.classList.remove('listening');
+
+      var record = document.getElementById('record');
+      record.classList.remove('playing');
+
+      var viz = document.getElementById('soundViz');
+      viz.classList.add('viz-idle');
+
+      clearInterval(waveInterval);
+      waveInterval = setInterval(spawnWave, 900);
+
+      var sp = document.getElementById('spotifyPlayer');
+      sp.classList.remove('active');
+      document.getElementById('spotifyIframe').src = '';
+
+      var items = document.querySelectorAll('.track-item');
+      for (var i = 0; i < items.length; i++) { items[i].classList.remove('active'); }
+
+      document.getElementById('deckTitle').textContent  = 'Chọn bài hát yêu thích của em nào';
+      document.getElementById('deckArtist').textContent = '💕 playlist của bé';
+
+      currentTrack = null;
+    }
+
+    var catBtns = document.querySelectorAll('.cat-btn');
+    for (var j = 0; j < catBtns.length; j++) {
+      catBtns[j].addEventListener('click', function() {
+        var allBtns = document.querySelectorAll('.cat-btn');
+        for (var k = 0; k < allBtns.length; k++) { allBtns[k].classList.remove('active'); }
+        this.classList.add('active');
+        currentCat = this.getAttribute('data-cat');
+        renderTracks();
+      });
+    }
+
+    renderTracks();
+  </script>
+</body>
+</html>

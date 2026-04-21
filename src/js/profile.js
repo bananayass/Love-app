@@ -62,7 +62,7 @@ document.getElementById('continueBtn').addEventListener('click', () => {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.5s ease';
     setTimeout(() => {
-        window.location.href = 'cause.html';
+        window.location.href = 'music.html';
     }, 500);
 });
 

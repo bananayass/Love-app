@@ -5,8 +5,7 @@ A romantic, multi-page birthday website for a girlfriend. Flows through 5 pages 
 ## Page Flow
 
 ```
-locket.html → index.html → birthday.html → last.html
-              (profile.html — accessible from birthday.html)
+locket.html → index.html → birthday.html → profile.html → music.html → cause.html → last.html
 ```
 
 ---
@@ -38,30 +37,38 @@ Asks "Em có yêu anh hemmmmmmmm?" with growing Yes button and dodging No button
 - **SVG elements:** 3-layer cake with frosting drip paths, cherry (radial gradient + stem path), sprinkles (rects with rotate transforms), heart decorations (bezier path), star decorations (polygon points), cake board (ellipse)
 - **Key CSS:** `@keyframes gradientFlow` (background), `confFall` (CSS confetti), `smokeRise` | CSS `radial-gradient` for flames, `linear-gradient` for frosting
 
-### 4. `src/html/last.html` — Love Letter
+### 4. `src/html/profile.html` — Love Profile
+Accessible from birthday.html. Floating hearts background, rose petals, profile card with photo, love note, and continue button linking to `music.html`.
+- **CSS:** `profile.css` — floating hearts, rose petals, photo frame, habits grid, love note card
+- **JS:** `profile.js` — floating hearts + petals generator, heart cursor trail, days-together counter, continue button navigation to `music.html`
+
+### 5. `src/html/music.html` — Music Player
+Pink-themed interactive playlist player. 15 songs from a shared Spotify playlist, each with a Spotify embed for 30-second previews.
+- **CSS animations:** Vinyl record deck with spinning disc + tonearm (activates on play) | Pulsing deck glow ring | Heartbeat text animation on track title | Speaker stack bars | 15-bar sound visualizer above deck | 12-bar side EQ columns (left + right) | 25 floating music notes (♪♫♬🎵🎶) | Floating hearts | Wave rings (expanding circles from center) | Blob background overlays
+- **Listening mode (all animations intensify when a track is playing):** Vinyl spins at 2s/rev | Wave rings speed up (0.6s interval) | Side EQ bars switch to darker magenta gradient, double speed | Floating notes accelerate | Deck glow ring pulses around platter | Deck title does heartbeat scale | Speaker bars speed up
+- **Stop behavior:** Clicking the active track again → all animations return to idle state, vinyl stops, iframe hidden
+- **Spotify embed:** Each track loads via `/embed/track/` URL — 30-second preview, no auth required
+- **Category filter:** Tất cả / Yêu / Chill / Ngọt / Buồn pills filter the track list
+- **Tracks:** 15 songs — Gps Remix, bồ em, Thích Em Hơi Nhiều, Ooh Just You, Hông Về Tình Iu, Tay To, GETCHA LOVE, Ai Đưa Em Về, Muốn Được Cùng Em, Yêu 5, Giấc Mơ Rất Thơ, When You Look at Me, Hướng Dương, Matchanah, Tình Ca Tình Ta
+- **Key CSS:** `@keyframes spin`, `deckPulse`, `heartBeat`, `waveExpand`, `floatNote`, `sideBounce`, `vizPulse`, `spPulse` | Pink gradient background (`#fce7f3 → #f472b6`) | Glassmorphism player card | CSS-only animations throughout
+
+### 6. `src/html/cause.html` — Cause Page
+- **CSS:** `cause.css`
+- **JS:** `cause.js`
+
+### 7. `src/html/last.html` — Love Letter
 A letter card that opens with a heart seal. Click to reveal the love letter with staggered text animation.
 - **CSS animations:** Card float keyframe | Heart pulse keyframe | Letter expand `max-height: 0→950px` transition | Text line reveal keyframe | Close shrink/fade animation
 - **Canvas effects:** Fireworks dots + bezier hearts + flower petals (`requestAnimationFrame` loop, color-coordinated particles)
 - **Interaction:** Card always visible. Click card → card fades out, `.letter-expand` wrapper expands, letter lines stagger in, signature slides in. Close button → reverse animation. On open, all animations restart via `void el.offsetWidth` reflow trick.
 - **Key CSS:** `@keyframes float-card`, `pulse-heart`, `sway-shake`, `bloom` | CSS `transition: max-height 0.8s cubic-bezier()` for open/close | `pointer-events: none/auto` to prevent ghost clicks on closed letter | `max-height: 0` with `overflow: hidden` for smooth collapse
 
-### 5. `src/html/profile.html` — Profile Page
-Accessible from birthday.html. A romantic profile/profile page.
-- **CSS:** `profile.css` — custom styling
-- **JS:** `profile.js` — interactive profile logic
-
 ---
-
-## Other Pages
 
 ### `src/html/anniversary.html` — Anniversary Page
 Anniversary celebration page.
 - **CSS:** `anniversary.css`
 - **JS:** `anniversary.js`
-
-### `src/html/cause.html` — Cause Page
-- **CSS:** `cause.css`
-- **JS:** `cause.js`
 
 ---
 
@@ -91,6 +98,14 @@ Anniversary celebration page.
 - `cardReveal` — scale + translateY for card entrance
 - `bloom` — scale burst for particle/section reveals
 - `gradientFlow` — background-position animation for gradient shift
+- `spin` — vinyl record 360° rotation (2s when playing, paused when stopped)
+- `deckPulse` — expanding/contracting border glow ring around deck
+- `heartBeat` — scale 1→1.05→1 pulse on deck title when listening
+- `waveExpand` — expanding circular rings from center (faster when listening)
+- `floatNote` — floating music notes drifting upward with rotation
+- `sideBounce` — side EQ bar height oscillation (faster + darker gradient when listening)
+- `vizPulse` — staggered height bounce for sound visualizer bars
+- `spPulse` — speaker stack bar oscillation
 
 ### CSS Transitions
 - `max-height` expand/collapse for letter open (0 → 950px)
