@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Yêu 💝</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffeef8 0%, #fff4fb 20%, #e8f0fe 50%, #fef0e8 75%, #f0ffe8 100%);
+      background-size: 400% 400%;
+      animation: gradientFlow 18s ease infinite;
+      font-family: 'Quicksand', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 1: HEART PARTICLE TRAIL — on drag
+       A canvas overlay spawns tiny hearts that drift and fade as you drag.
+       Each particle has random velocity, spin, color, and lifetime.
+       Hearts use bezier curves for a soft, organic heart shape.
+    ════════════════════════════════════════════════════════════════ */
+    #trailCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 4: TILT TOWARD CURSOR — 3D perspective CSS
+       As pieces hover over the frame, they tilt slightly toward the
+       mouse using CSS perspective and rotateX/Y transforms. This gives
+       a physical "lifting card" feel — the piece appears to face the cursor.
+    ════════════════════════════════════════════════════════════════ */
+    .pieces-area {
+      position: relative;
+      width: 380px;
+      height: 380px;
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 2px solid rgba(255,180,200,0.4);
+      box-shadow: 0 8px 32px rgba(176,64,128,0.15);
+      perspective: 600px;
+    }
+
+    .scattered-piece {
+      position: absolute;
+      width: 105px;
+      height: 105px;
+      border-radius: 12px;
+      background-image: url('../images/d1.jpg');
+      background-size: 315px 315px;
+      cursor: grab;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      transition: box-shadow 0.2s ease, transform 0.15s ease;
+      user-select: none;
+      transform-style: preserve-3d;
+    }
+
+    .scattered-piece:hover {
+      box-shadow: 0 10px 28px rgba(255,20,147,0.35);
+      z-index: 5;
+    }
+
+    .scattered-piece:active { cursor: grabbing; }
+
+    .scattered-piece.dragging {
+      opacity: 0.35;
+      transform: scale(0.88);
+      z-index: 100;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 5: SPARKLE SHIMMER BORDER — twinkling dots on frame
+       Tiny dots animate along the love-frame border using
+       `background: repeating-radial-gradient` with staggered delays.
+       Each dot pulses opacity from 0.2 → 1 → 0.2 with varying speeds
+       (1.2s–3.5s) so they twinkle independently like stars.
+    ════════════════════════════════════════════════════════════════ */
+    .love-frame {
+      position: relative;
+      padding: 18px;
+      background: linear-gradient(135deg, #fff0f5, #ffe4ec, #ffd6e8);
+      border-radius: 20px;
+      border: 3px solid rgba(255,105,180,0.5);
+      box-shadow:
+        0 0 0 6px rgba(255,105,180,0.15),
+        0 0 0 10px rgba(255,105,180,0.08),
+        0 16px 48px rgba(255,20,147,0.25);
+    }
+
+    /* corner hearts animation */
+    .love-frame::before,
+    .love-frame::after {
+      content: '❤';
+      position: absolute;
+      font-size: 22px;
+      animation: heartBeat 1.2s ease-in-out infinite;
+    }
+
+    .love-frame::before {
+      top: -12px; left: -12px;
+      animation-delay: 0s;
+    }
+
+    .love-frame::after {
+      bottom: -12px; right: -12px;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    /* inner golden border */
+    .frame-inner {
+      border: 2px solid rgba(255,105,180,0.3);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* sparkle dots ring */
+    .sparkle-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 26px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .sparkle-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, #ffb6d9 60%, transparent 100%);
+      animation: sparklePulse var(--dur, 2s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes sparklePulse {
+      0%, 100% { opacity: 0.2; transform: scale(0.6); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 6: CORNER RIBBON BOW — decorative bow on top of frame
+       A CSS-only bow made from two rotated ellipses and a center knot.
+       The bow sits at the top-center of the frame and gently sways
+       left-right with a subtle rotation animation. Ribbon tails hang
+       down with a wavy undulation using mismatched animation durations.
+    ════════════════════════════════════════════════════════════════ */
+    .ribbon-bow {
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .bow-center {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle, #ff6b8a 0%, #e91e63 100%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 6px rgba(233,30,99,0.4);
+      z-index: 3;
+    }
+
+    .bow-loop {
+      position: absolute;
+      width: 38px;
+      height: 28px;
+      background: linear-gradient(135deg, #ff85a2 0%, #e91e63 50%, #ff6b8a 100%);
+      border-radius: 50%;
+      top: 0;
+      box-shadow: inset -2px -2px 6px rgba(0,0,0,0.15), 2px 3px 8px rgba(233,30,99,0.3);
+      animation: bowSway 2.8s ease-in-out infinite;
+    }
+
+    .bow-loop.left {
+      right: 50%;
+      transform: translateX(-70%) rotate(-28deg);
+      animation-delay: 0s;
+    }
+
+    .bow-loop.right {
+      left: 50%;
+      transform: translateX(70%) rotate(28deg);
+      animation-delay: 0.3s;
+    }
+
+    @keyframes bowSway {
+      0%, 100% { transform: translateX(-70%) rotate(-28deg); }
+      50% { transform: translateX(-70%) rotate(-22deg); }
+    }
+
+    .bow-tail {
+      position: absolute;
+      width: 14px;
+      height: 52px;
+      background: linear-gradient(to bottom, #e91e63 0%, #f48fb1 60%, #ffcdd9 100%);
+      top: 22px;
+      border-radius: 0 0 50% 50%;
+      transform-origin: top center;
+    }
+
+    .bow-tail.left {
+      left: 0;
+      transform: rotate(12deg);
+      animation: tailWave 2.1s ease-in-out infinite;
+    }
+
+    .bow-tail.right {
+      right: 0;
+      transform: rotate(-12deg);
+      animation: tailWave 2.4s ease-in-out infinite;
+      animation-delay: 0.2s;
+    }
+
+    @keyframes tailWave {
+      0%, 100% { transform: rotate(12deg); }
+      50% { transform: rotate(17deg); }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 8: HEART CONSTELLATION — progress dots connect into heart
+       Progress dots (1–9) when filled sequentially trace a heart shape
+       using SVG lines. CSS transitions animate the stroke-dashoffset of
+       each connecting line from full length → 0 as pieces are placed.
+       A CSS heart shape made with clip-path fills in as dots connect.
+    ════════════════════════════════════════════════════════════════ */
+    .constellation-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .constellation-line {
+      stroke: #ff69b4;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      transition: stroke-dashoffset 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .constellation-line.active {
+      stroke-dashoffset: 0;
+    }
+
+    .progress-dot {
+      position: relative;
+    }
+
+    .progress-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,105,180,0.5) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .progress-dot.filled::after {
+      opacity: 1;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 9: FIREFLY AMBIENT — drifting soft glow dots
+       Pseudo-elements on the body animate using @keyframes with
+       randomized positions, sizes, and durations. Each firefly
+       has a soft radial glow (box-shadow blur) and gentle drift.
+    ════════════════════════════════════════════════════════════════ */
+    .firefly {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,200,0.9) 0%, rgba(255,220,100,0) 70%);
+      pointer-events: none;
+      animation: fireflyDrift var(--dur, 8s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+      box-shadow: 0 0 var(--glow, 8px) 3px rgba(255,255,150,0.6);
+    }
+
+    @keyframes fireflyDrift {
+      0% { transform: translate(0, 0) scale(0.8); opacity: 0.3; }
+      25% { transform: translate(calc(var(--dx, 30px)), calc(var(--dy, -20px))) scale(1); opacity: 0.8; }
+      50% { transform: translate(calc(var(--dx, -20px)), calc(var(--dy, 40px))) scale(0.9); opacity: 0.5; }
+      75% { transform: translate(calc(var(--dx, 10px)), calc(var(--dy, -30px))) scale(1.1); opacity: 0.9; }
+      100% { transform: translate(calc(var(--dx, 40px)), calc(var(--dy, 20px))) scale(0.8); opacity: 0.3; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 10: TICKER TAPE BURST — hearts fall from top on correct drop
+       Each correct drop spawns 6–8 heart particles from the slot's
+       top edge. Hearts fall with gravity physics (vy += 0.2 per frame),
+       random horizontal drift, and spin. They fade out as they fall.
+    ════════════════════════════════════════════════════════════════ */
+    #burstCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 150;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 11: TITLE SPRING BOUNCE — "Puzzle Yêu" bounces
+       Uses cubic-bezier(0.68, -0.55, 0.27, 1.55) — the overshoot
+       curve: fast start (0.68), pulls past target (negative resistance
+       -0.55), then snaps back (1.55). Applied on page load and on
+       replay. Each title element uses a staggered delay (0–0.4s).
+    ════════════════════════════════════════════════════════════════ */
+    .zone-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: #ff1493;
+      text-shadow: 0 0 15px rgba(255,20,147,0.5);
+      text-align: center;
+      animation: titleSpring 1.2s cubic-bezier(0.68,-0.55,0.27,1.55) forwards;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+
+    @keyframes titleSpring {
+      0% { transform: translateY(-60px) scale(0.4); opacity: 0; }
+      50% { transform: translateY(8px) scale(1.05); opacity: 1; }
+      70% { transform: translateY(-10px) scale(0.97); }
+      85% { transform: translateY(4px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .frame-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      color: #ff1493;
+      text-shadow: 0 0 15px rgba(255,20,147,0.5);
+      text-align: center;
+      animation: titleSpring 1.2s cubic-bezier(0.68,-0.55,0.27,1.55) forwards;
+      animation-delay: var(--delay, 0.2s);
+      opacity: 0;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 12: SHIMMER WAVE SWEEP — shine glint sweeps on solve
+       A white gradient band (120px wide) moves left→right across
+       the love-frame on solve. Keyframe animates `transform: translateX`
+       from -120px to 400px while opacity fades in/out at edges.
+    ════════════════════════════════════════════════════════════════ */
+    .shimmer-sweep {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 0;
+    }
+
+    .shimmer-sweep.active {
+      opacity: 1;
+    }
+
+    .shimmer-sweep::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 120px;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.55) 30%,
+        rgba(255,255,255,0.9) 50%,
+        rgba(255,255,255,0.55) 70%,
+        transparent 100%
+      );
+      transform: translateX(-120px);
+      animation: shimmerMove 1.8s ease-in-out forwards;
+    }
+
+    @keyframes shimmerMove {
+      0% { transform: translateX(-120px); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateX(420px); opacity: 0; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 13: FLASH FRAME OUTLINE — frame flashes white→pink on solve
+       love-frame gets a brief white flash (box-shadow inset white glow)
+       then transitions to a pink pulse. Uses animation-fill-mode: forwards
+       so the final state persists. The flash lasts ~0.8s then settles
+       into a steady pulsing glow that matches the solvedGlow animation.
+    ════════════════════════════════════════════════════════════════ */
+    .love-frame.flash-solve {
+      animation: solveFlash 0.8s ease-out forwards, solvedGlow 1.5s ease-in-out 0.8s infinite alternate;
+    }
+
+    @keyframes solveFlash {
+      0% { box-shadow: 0 0 0 6px rgba(255,255,255,0.9), 0 0 0 10px rgba(255,105,180,0.4), 0 16px 48px rgba(255,20,147,0.5); }
+      40% { box-shadow: 0 0 0 8px rgba(255,105,180,0.7), 0 0 0 14px rgba(255,20,147,0.3), 0 16px 60px rgba(255,20,147,0.8); }
+      100% { box-shadow: 0 0 0 6px rgba(255,105,180,0.2), 0 0 0 10px rgba(255,105,180,0.1), 0 16px 48px rgba(255,20,147,0.3); }
+    }
+
+    /* solved state frame glow */
+    .love-frame.solved {
+      animation: solvedGlow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes solvedGlow {
+      from { box-shadow: 0 0 0 6px rgba(255,105,180,0.2), 0 0 0 10px rgba(255,105,180,0.1), 0 16px 48px rgba(255,20,147,0.3); }
+      to { box-shadow: 0 0 0 8px rgba(255,105,180,0.4), 0 0 0 14px rgba(255,105,180,0.2), 0 16px 60px rgba(255,20,147,0.5); }
+    }
+
+    /* ── Magnetic snap glow on correct slot proximity ── */
+    .target-slot.magnetic {
+      background: rgba(100,255,180,0.25) !important;
+      box-shadow: 0 0 18px rgba(100,255,180,0.6), inset 0 0 12px rgba(100,255,180,0.3);
+      animation: magneticPulse 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes magneticPulse {
+      from { box-shadow: 0 0 12px rgba(100,255,180,0.4), inset 0 0 8px rgba(100,255,180,0.2); }
+      to { box-shadow: 0 0 22px rgba(100,255,180,0.8), inset 0 0 16px rgba(100,255,180,0.4); }
+    }
+
+    /* ── Ripple on correct drop ── */
+    .target-slot.ripple::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,105,180,0.6) 0%, transparent 70%);
+      animation: dropRipple 0.7s ease-out forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @keyframes dropRipple {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(4); opacity: 0; }
+    }
+
+    /* ── Floating Hearts Background ── */
+    .hearts-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .float-heart {
+      position: absolute;
+      animation: floatUp linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) rotate(0deg) scale(1); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.7; }
+      100% { transform: translateY(-120px) rotate(360deg) scale(0.5); opacity: 0; }
+    }
+
+    /* ── Layout ── */
+    .game-layout {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      min-height: 100vh;
+      padding: 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .left-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .right-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+
+    .frame-target {
+      width: 315px;
+      height: 315px;
+      background: rgba(255,255,255,0.5);
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 105px);
+      grid-template-rows: repeat(3, 105px);
+      gap: 0;
+      transition: background 0.3s;
+    }
+
+    .frame-target.drag-over {
+      background: rgba(255,228,248,0.7);
+    }
+
+    .target-slot {
+      position: relative;
+      border: 1px solid rgba(255,105,180,0.15);
+      transition: background 0.2s;
+    }
+
+    .target-slot.drag-over {
+      background: rgba(255,20,147,0.12);
+    }
+
+    .target-slot.filled {
+      background: transparent !important;
+    }
+
+    .placed-piece {
+      position: absolute;
+      inset: 0;
+      width: 105px;
+      height: 105px;
+      background-image: url('../images/d1.jpg');
+      background-size: 315px 315px;
+      border-radius: 0;
+      cursor: default;
+      animation: snapIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: none;
+      z-index: 5;
+    }
+
+    @keyframes snapIn {
+      0% { transform: scale(0.5) rotate(10deg); opacity: 0; }
+      60% { transform: scale(1.1) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .frame-reference {
+      position: absolute;
+      inset: 0;
+      background-image: url('../images/d1.jpg');
+      background-size: 315px 315px;
+      opacity: 0.15;
+      filter: blur(4px) saturate(0.5);
+      pointer-events: none;
+      border-radius: 0;
+      transition: opacity 0.6s, filter 0.6s;
+    }
+
+    .frame-reference.revealed {
+      opacity: 0;
+      filter: blur(0px) saturate(1);
+    }
+
+    /* ── Progress ── */
+    .progress-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .progress-label {
+      font-size: 1rem;
+      color: #b04080;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .progress-track {
+      display: flex;
+      gap: 6px;
+    }
+
+    .progress-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,105,180,0.2);
+      border: 2px solid rgba(255,105,180,0.3);
+      transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .progress-dot.filled {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      border-color: #ff1493;
+      transform: scale(1.15);
+      box-shadow: 0 0 12px rgba(255,20,147,0.5);
+    }
+
+    /* ── Scramble Button ── */
+    .btn-scramble {
+      padding: 12px 36px;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 20px rgba(255,20,147,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-scramble:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 28px rgba(255,20,147,0.5);
+    }
+
+    /* modal hearts */
+    .modal-hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .modal-heart {
+      position: absolute;
+      animation: modalFloat linear infinite;
+    }
+
+    @keyframes modalFloat {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-120px) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── Celebration Modal ── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(255,228,248,0.97) 0%, rgba(255,200,230,0.98) 100%);
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 200;
+    }
+
+    .modal.show {
+      display: flex;
+      animation: modalIn 0.6s cubic-bezier(0.34,1.4,0.64,1) forwards;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .replay-btn {
+      margin-top: 28px;
+      padding: 14px 44px;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 6px 24px rgba(255,20,147,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .replay-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 32px rgba(255,20,147,0.6);
+    }
+
+    /* ── Bouquet Celebration ── */
+    .bouquet-container {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      z-index: 10;
+      animation: bouquetPopIn 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @keyframes bouquetPopIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.08); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .bouquet-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bouquet-flower {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      border: 4px solid rgba(255,105,180,0.6);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+      animation: flowerPop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      opacity: 0;
+      position: relative;
+    }
+
+    .bouquet-flower::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,105,180,0.3);
+      animation: petalRing 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flowerPop {
+      0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes petalRing {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+    }
+
+    .flower-emoji {
+      position: absolute;
+      font-size: 22px;
+      animation: emojiOrbit 3s ease-in-out infinite;
+    }
+
+    @keyframes emojiOrbit {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(10deg); }
+    }
+
+    .bouquet-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .bouquet-video-wrap {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 4px solid rgba(255,105,180,0.5);
+      box-shadow: 0 0 0 8px rgba(255,105,180,0.15), 0 12px 40px rgba(255,20,147,0.4);
+      animation: videoGlow 2s ease-in-out infinite alternate;
+    }
+
+    .bouquet-video-wrap video {
+      display: block;
+      width: 320px;
+      height: 240px;
+      object-fit: cover;
+    }
+
+    @keyframes videoGlow {
+      from { box-shadow: 0 0 0 8px rgba(255,105,180,0.15), 0 12px 40px rgba(255,20,147,0.3); }
+      to { box-shadow: 0 0 0 12px rgba(255,105,180,0.25), 0 12px 60px rgba(255,20,147,0.6); }
+    }
+
+    .video-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(255,105,180,0.15) 100%);
+      pointer-events: none;
+    }
+
+    .bouquet-texts {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bouquet-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: #ff1493;
+      text-shadow: 0 0 15px rgba(255,20,147,0.5);
+      opacity: 0;
+      animation: textReveal 0.6s ease forwards;
+    }
+
+    @keyframes textReveal {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .petal-rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .petal {
+      position: absolute;
+      animation: petalFall linear forwards;
+      border-radius: 50% 0 50% 0;
+    }
+
+    @keyframes petalFall {
+      0% { transform: translateY(-30px) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+    }
+
+    .bouquet-left .bouquet-flower:nth-child(1) { animation-delay: 0.1s; }
+    .bouquet-left .bouquet-flower:nth-child(2) { animation-delay: 0.25s; }
+    .bouquet-left .bouquet-flower:nth-child(3) { animation-delay: 0.4s; }
+    .bouquet-right .bouquet-flower:nth-child(1) { animation-delay: 0.2s; }
+    .bouquet-right .bouquet-flower:nth-child(2) { animation-delay: 0.35s; }
+    .bouquet-right .bouquet-flower:nth-child(3) { animation-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+  <div class="hearts-bg" id="heartsBg"></div>
+  <canvas id="trailCanvas"></canvas>
+  <canvas id="burstCanvas"></canvas>
+  <div id="fireflies" style="position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;"></div>
+
+  <div class="game-layout">
+
+    <!-- LEFT: scattered full-image pieces -->
+    <div class="left-zone">
+      <div class="zone-title" style="--delay:0s">💕 Kéo thả vào khung 💕</div>
+      <div class="pieces-area" id="piecesArea"></div>
+      <button class="btn-scramble" onclick="scramble()">🔀 Xáo trộn lại</button>
+    </div>
+
+    <!-- RIGHT: love frame target -->
+    <div class="right-zone">
+      <div class="frame-title" style="--delay:0.15s">✨ Ghép hình nào ✨</div>
+      <div class="love-frame" id="loveFrame">
+        <!-- Ribbon bow decoration (Animation 6) -->
+        <div class="ribbon-bow">
+          <div class="bow-tail left"></div>
+          <div class="bow-tail right"></div>
+          <div class="bow-loop left"></div>
+          <div class="bow-loop right"></div>
+          <div class="bow-center"></div>
+        </div>
+        <!-- Shimmer sweep (Animation 12) -->
+        <div class="shimmer-sweep" id="shimmerSweep"></div>
+        <!-- Sparkle shimmer border (Animation 5) -->
+        <div class="sparkle-ring" id="sparkleRing"></div>
+        <div class="frame-inner">
+          <div class="frame-target" id="frameTarget">
+            <div class="frame-reference" id="frameRef"></div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">Tiến độ</div>
+        <!-- Constellation SVG connects filled dots into heart shape (Animation 8) -->
+        <svg class="constellation-svg" id="constellationSvg" viewBox="0 0 200 50" preserveAspectRatio="none"></svg>
+        <div class="progress-track" id="progressTrack"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Celebration Bouquet Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-hearts" id="modalHearts"></div>
+    <div class="bouquet-container" id="bouquetContainer">
+      <!-- Left flowers -->
+      <div class="bouquet-side bouquet-left" id="bouquetLeft"></div>
+
+      <!-- Center: video + texts -->
+      <div class="bouquet-center">
+        <div class="bouquet-video-wrap" id="bouquetVideoWrap">
+          <video id="bouquetVideo" src="../images/dance.mp4" autoplay muted loop playsinline></video>
+          <div class="video-glow"></div>
+        </div>
+        <div class="bouquet-texts" id="bouquetTexts"></div>
+        <button class="replay-btn" onclick="resetGame()">🔄 Chơi Lại</button>
+      </div>
+
+      <!-- Right flowers -->
+      <div class="bouquet-side bouquet-right" id="bouquetRight"></div>
+    </div>
+    <!-- Flower petal rain -->
+    <div class="petal-rain" id="petalRain"></div>
+  </div>
+
+  <script>
+    const GRID = 3, TOTAL = GRID * GRID;
+    const PIECE_SZ = 105;
+    const IMG_SZ = 315;
+    const loveLanguages = [
+      'I love you', 'Anh yêu em', 'Je t\'aime', 'Te amo',
+      'Ti amo', 'Ich liebe dich', 'Saranghae', 'Aku cinta kamu'
+    ];
+
+    // piece index → correct slot
+    // slot → piece index (-1 = empty)
+    let slotMap = Array.from({ length: TOTAL }, () => -1);
+    let placedCount = 0;
+
+    /* ── Background hearts ── */
+    function initBackgroundHearts() {
+      const bg = document.getElementById('heartsBg');
+      const emojis = ['❤','💕','💗','💖','🩷','🤍','💓'];
+      for (let i = 0; i < 25; i++) {
+        const h = document.createElement('div');
+        h.className = 'float-heart';
+        h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        h.style.left = `${Math.random() * 100}%`;
+        h.style.fontSize = `${14 + Math.random() * 18}px`;
+        h.style.animationDuration = `${6 + Math.random() * 7}s`;
+        h.style.animationDelay = `${Math.random() * 7}s`;
+        bg.appendChild(h);
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 1: HEART PARTICLE TRAIL
+       Spawns tiny hearts on drag that follow the cursor with physics:
+       each particle has random angle, speed, spin, color, lifetime.
+       Hearts drawn with canvas bezier curves for organic shape.
+    ════════════════════════════════════════════════════════════════ */
+    const trailCanvas = document.getElementById('trailCanvas');
+    const tctx = trailCanvas.getContext('2d');
+    let trailParticles = [];
+
+    function resizeTrail() {
+      trailCanvas.width = window.innerWidth;
+      trailCanvas.height = window.innerHeight;
+    }
+    resizeTrail();
+    window.addEventListener('resize', resizeTrail);
+
+    function drawTrailHeart(x, y, size, color, alpha, rot) {
+      tctx.save();
+      tctx.globalAlpha = alpha;
+      tctx.fillStyle = color;
+      tctx.translate(x, y);
+      tctx.rotate(rot);
+      tctx.beginPath();
+      tctx.moveTo(0, size * 0.3);
+      tctx.bezierCurveTo(-size/2, -size*0.3, -size, size*0.1, 0, size);
+      tctx.bezierCurveTo(size, size*0.1, size/2, -size*0.3, 0, size*0.3);
+      tctx.fill();
+      tctx.restore();
+    }
+
+    function animateTrail() {
+      tctx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      trailParticles = trailParticles.filter(p => p.alpha > 0.02);
+      trailParticles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        p.vy += 0.04;
+        p.rot += p.rotSpeed; p.alpha -= p.decay;
+        drawTrailHeart(p.x, p.y, p.size, p.color, p.alpha, p.rot);
+      });
+      requestAnimationFrame(animateTrail);
+    }
+    animateTrail();
+
+    let lastTrailX = 0, lastTrailY = 0;
+    document.addEventListener('dragover', (e) => {
+      if (e.clientX === 0 && e.clientY === 0) return;
+      // Spawn trail particle every ~25px of movement
+      const dx = e.clientX - lastTrailX, dy = e.clientY - lastTrailY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist > 20) {
+        trailParticles.push({
+          x: e.clientX + (Math.random() - 0.5) * 20,
+          y: e.clientY + (Math.random() - 0.5) * 20,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: -0.5 - Math.random() * 1,
+          size: 7 + Math.random() * 10,
+          alpha: 0.85, rot: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.12,
+          decay: 0.018 + Math.random() * 0.012,
+          color: ['#ff69b4','#ff1493','#ff85a2','#ffd1dc','#ffb6c1'][Math.floor(Math.random() * 5)]
+        });
+        lastTrailX = e.clientX; lastTrailY = e.clientY;
+      }
+    });
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 2: MAGNETIC SNAP GLOW — green glow when near correct slot
+       During dragover, check if the piece's correct position matches
+       this slot. If so, add .magnetic class for green pulsing glow.
+       Removes when leaving slot to avoid misleading feedback.
+    ════════════════════════════════════════════════════════════════ */
+    function initMagneticDetection() {
+      const target = document.getElementById('frameTarget');
+      target.addEventListener('dragover', (e) => {
+        const slot = e.target.closest('.target-slot');
+        if (!slot) return;
+        const slotIdx = parseInt(slot.dataset.slot);
+        const pieceIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        // Highlight correct slot
+        document.querySelectorAll('.target-slot').forEach(s => s.classList.remove('magnetic'));
+        if (pieceIdx >= 0 && slotMap[slotIdx] === -1 && slotIdx === pieceIdx) {
+          slot.classList.add('magnetic');
+        }
+      });
+      target.addEventListener('dragleave', (e) => {
+        const slot = e.target.closest('.target-slot');
+        if (slot) slot.classList.remove('magnetic');
+      });
+      target.addEventListener('drop', (e) => {
+        const slot = e.target.closest('.target-slot');
+        if (slot) slot.classList.remove('magnetic');
+      });
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 3: RIPPLE ON CORRECT DROP — water ripple expands
+       When a piece lands in its CORRECT slot, add .ripple class.
+       CSS ::after pseudo-element animates scale(0)→scale(4) with
+       radial-gradient fading to transparent. Removed after 0.7s.
+    ════════════════════════════════════════════════════════════════ */
+    function triggerRipple(slotIdx) {
+      const slot = document.querySelector(`.target-slot[data-slot="${slotIdx}"]`);
+      if (!slot) return;
+      slot.classList.add('ripple');
+      setTimeout(() => slot.classList.remove('ripple'), 700);
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 5: SPARKLE SHIMMER BORDER — 24 twinkling dots
+       Dots positioned around the frame border using inset distances.
+       Each dot has a randomized animation duration (1.2–3.5s) and
+       delay (0–3s) via CSS custom properties set in JS.
+    ════════════════════════════════════════════════════════════════ */
+    function buildSparkleRing() {
+      const ring = document.getElementById('sparkleRing');
+      if (!ring) return;
+      ring.innerHTML = '';
+      const dots = 24;
+      const perimeter = 2 * (ring.offsetWidth || 300) + 2 * (ring.offsetHeight || 60);
+      for (let i = 0; i < dots; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'sparkle-dot';
+        const t = i / dots;
+        let px, py;
+        if (t < 0.25) {
+          // top edge, left→right
+          px = `${5 + t * 4 * 100}%`; py = '0%';
+        } else if (t < 0.5) {
+          // right edge, top→bottom
+          px = '100%'; py = `${5 + (t - 0.25) * 4 * 100}%`;
+        } else if (t < 0.75) {
+          // bottom edge, right→left
+          px = `${95 - (t - 0.5) * 4 * 100}%`; py = '100%';
+        } else {
+          // left edge, bottom→top
+          px = '0%'; py = `${95 - (t - 0.75) * 4 * 100}%`;
+        }
+        dot.style.left = px; dot.style.top = py;
+        dot.style.setProperty('--dur', `${1.2 + Math.random() * 2.3}s`);
+        dot.style.setProperty('--delay', `${Math.random() * 3}s`);
+        ring.appendChild(dot);
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 9: FIREFLY AMBIENT — 15 drifting glow dots
+       Pseudo-elements are too limited, so JS creates real div.firefly
+       elements with randomized CSS vars for drift direction/speed.
+    ════════════════════════════════════════════════════════════════ */
+    function buildFireflies() {
+      const container = document.getElementById('fireflies');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 0; i < 15; i++) {
+        const ff = document.createElement('div');
+        ff.className = 'firefly';
+        const size = 4 + Math.random() * 8;
+        ff.style.width = size + 'px';
+        ff.style.height = size + 'px';
+        ff.style.left = `${Math.random() * 100}%`;
+        ff.style.top = `${Math.random() * 100}%`;
+        ff.style.setProperty('--dur', `${7 + Math.random() * 10}s`);
+        ff.style.setProperty('--delay', `${Math.random() * 8}s`);
+        ff.style.setProperty('--dx', `${(Math.random() - 0.5) * 80}px`);
+        ff.style.setProperty('--dy', `${(Math.random() - 0.5) * 80}px`);
+        ff.style.setProperty('--glow', `${6 + Math.random() * 10}px`);
+        container.appendChild(ff);
+      }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 10: TICKER TAPE BURST — hearts from slot on correct drop
+       Reuses the burst canvas. spawnHearts() is called at the slot's
+       viewport position when a piece lands in its correct slot.
+    ════════════════════════════════════════════════════════════════ */
+    function triggerTickerDrop(slotIdx) {
+      const slot = document.querySelector(`.target-slot[data-slot="${slotIdx}"]`);
+      if (!slot) return;
+      const rect = slot.getBoundingClientRect();
+      spawnHearts(rect.left + rect.width / 2, rect.top + rect.height / 2, 8);
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 12: SHIMMER WAVE SWEEP — triggers on solve
+       Adds .active to shimmerSweep, CSS animation does the rest.
+       Cleaned up when game resets.
+    ════════════════════════════════════════════════════════════════ */
+    function triggerShimmer() {
+      const shimmer = document.getElementById('shimmerSweep');
+      if (!shimmer) return;
+      shimmer.classList.remove('active');
+      void shimmer.offsetWidth; // reflow to restart animation
+      shimmer.classList.add('active');
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       ANIMATION 13: FLASH FRAME OUTLINE — brief white flash on solve
+       Removes any existing solved class, adds flash-solve which plays
+       a white→pink flash (0.8s) then hands off to solvedGlow loop.
+    ════════════════════════════════════════════════════════════════ */
+    function triggerFlashSolve() {
+      const frame = document.getElementById('loveFrame');
+      frame.classList.remove('solved', 'flash-solve');
+      void frame.offsetWidth;
+      frame.classList.add('flash-solve');
+    }
+
+    /* ── Build 9 slots ── */
+    function buildSlots() {
+      const target = document.getElementById('frameTarget');
+      // keep reference div
+      const ref = document.getElementById('frameRef');
+      target.innerHTML = '';
+      target.appendChild(ref);
+
+      for (let i = 0; i < TOTAL; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'target-slot';
+        slot.dataset.slot = i;
+
+        slot.addEventListener('dragover', (e) => {
+          if (slotMap[i] === -1) {
+            e.preventDefault();
+            slot.classList.add('drag-over');
+          }
+        });
+
+        slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+
+        slot.addEventListener('drop', (e) => {
+          e.preventDefault();
+          slot.classList.remove('drag-over');
+
+          const pieceIdx = parseInt(e.dataTransfer.getData('text/plain'));
+          const fromSlot = e.dataTransfer.getData('fromSlot');
+
+          if (fromSlot === 'area') {
+            // From area: find the actual scattered piece element and move it
+            const area = document.getElementById('piecesArea');
+            const scattered = area.querySelector(`.scattered-piece[data-index="${pieceIdx}"]`);
+            if (!scattered) return;
+
+            // Empty the target slot if occupied
+            if (slotMap[i] !== -1) {
+              const occupying = slot.querySelector('.placed-piece');
+              if (occupying) {
+                const occIdx = parseInt(occupying.dataset.index);
+                // Move occupying piece back to area
+                occupying.className = 'scattered-piece';
+                occupying.style.left = scattered.style.left;
+                occupying.style.top = scattered.style.top;
+                occupying.draggable = true;
+                occupying.dataset.fromSlot = '';
+                area.appendChild(occupying);
+                slotMap[i] = -1;
+                placedCount--;
+              }
+            }
+
+            // Convert to placed-piece and move to slot
+            scattered.className = 'placed-piece';
+            scattered.style.left = '';
+            scattered.style.top = '';
+            scattered.draggable = true;
+            scattered.dataset.fromSlot = i;
+
+            // Update dragstart for placed-piece
+            const newDs = scattered.cloneNode(false);
+            scattered.addEventListener('dragstart', (ev) => {
+              ev.dataTransfer.setData('text/plain', pieceIdx);
+              ev.dataTransfer.setData('fromSlot', i);
+              ev.dataTransfer.effectAllowed = 'move';
+              scattered.classList.add('dragging');
+            });
+            scattered.addEventListener('dragend', () => {
+              scattered.classList.remove('dragging');
+            });
+
+            slot.innerHTML = '';
+            slot.appendChild(scattered);
+            slot.classList.add('filled');
+
+            // Update slotMap
+            const oldSlotMapVal = slotMap[i];
+            slotMap[i] = pieceIdx;
+            placedCount++;
+            updateProgress();
+            if (pieceIdx === i) { triggerRipple(i); triggerTickerDrop(i); }
+            checkWin();
+
+          } else if (!isNaN(parseInt(fromSlot))) {
+            // From another slot: move the actual placed-piece element
+            const srcIdx = parseInt(fromSlot);
+            const srcSlot = document.querySelector(`.target-slot[data-slot="${srcIdx}"]`);
+            const movingEl = srcSlot.querySelector('.placed-piece');
+            if (!movingEl) return;
+
+            if (slotMap[i] !== -1) {
+              // Swap: move target's piece to source slot
+              const targetEl = slot.querySelector('.placed-piece');
+              if (!targetEl) return;
+              const targetIdx = parseInt(targetEl.dataset.index);
+              srcSlot.innerHTML = '';
+              targetEl.className = 'placed-piece';
+              srcSlot.appendChild(targetEl);
+              targetEl.dataset.fromSlot = srcIdx;
+              slotMap[srcIdx] = targetIdx;
+            } else {
+              // Clear source slot
+              srcSlot.innerHTML = '';
+              srcSlot.classList.remove('filled');
+              slotMap[srcIdx] = -1;
+              placedCount--;
+            }
+
+            // Move piece to target slot
+            movingEl.dataset.fromSlot = i;
+            slot.innerHTML = '';
+            slot.appendChild(movingEl);
+            slot.classList.add('filled');
+            slotMap[i] = pieceIdx;
+            placedCount++;
+            updateProgress();
+            if (pieceIdx === i) { triggerRipple(i); triggerTickerDrop(i); }
+            checkWin();
+          }
+        });
+
+        target.appendChild(slot);
+      }
+    }
+
+    /* ── Place piece in slot (moved element approach — handled in slot drop) ── */
+    // placePiece logic is now inline in the slot drop handler
+
+    /* ── Build scattered pieces ── */
+    function buildPieces() {
+      const area = document.getElementById('piecesArea');
+      area.innerHTML = '';
+
+      const positions = [
+        { x: 10,  y: 20  },
+        { x: 130, y: 5   },
+        { x: 250, y: 30  },
+        { x: 20,  y: 140 },
+        { x: 140, y: 130 },
+        { x: 260, y: 145 },
+        { x: 5,   y: 255 },
+        { x: 125, y: 260 },
+        { x: 250, y: 250 },
+      ];
+
+      // Shuffle positions so pieces appear randomly scattered
+      for (let i = positions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [positions[i], positions[j]] = [positions[j], positions[i]];
+      }
+
+      // Accept drops back into the area (from frame)
+      area.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+
+      area.addEventListener('drop', (e) => {
+        e.preventDefault();
+
+        const pieceIdx = parseInt(e.dataTransfer.getData('text/plain'));
+        const fromSlot = e.dataTransfer.getData('fromSlot');
+
+        if (isNaN(parseInt(fromSlot))) return; // only handle slot→area drops
+
+        const srcIdx = parseInt(fromSlot);
+        const srcSlot = document.querySelector(`.target-slot[data-slot="${srcIdx}"]`);
+        const movingEl = srcSlot ? srcSlot.querySelector('.placed-piece') : null;
+        if (!movingEl) return;
+
+        // Update slot state
+        slotMap[srcIdx] = -1;
+        placedCount--;
+        srcSlot.innerHTML = '';
+        srcSlot.classList.remove('filled');
+
+        // Convert to scattered piece and move to area
+        movingEl.className = 'scattered-piece';
+        movingEl.draggable = true;
+        movingEl.dataset.fromSlot = '';
+        // Assign random free position
+        const existing = area.querySelectorAll('.scattered-piece');
+        const usedPositions = new Set([...existing].map(p => `${p.style.left},${p.style.top}`));
+        let pos = positions[pieceIdx];
+        if (usedPositions.has(`${pos.x}px,${pos.y}px`)) {
+          pos = positions.find(p => !usedPositions.has(`${p.x}px,${p.y}px`)) || positions[0];
+        }
+        movingEl.style.left = pos.x + 'px';
+        movingEl.style.top = pos.y + 'px';
+
+        // Re-attach dragstart for scattered piece
+        movingEl.addEventListener('dragstart', (ev) => {
+          ev.dataTransfer.setData('text/plain', pieceIdx);
+          ev.dataTransfer.setData('fromSlot', 'area');
+          ev.dataTransfer.effectAllowed = 'move';
+          movingEl.classList.add('dragging');
+        });
+        movingEl.addEventListener('dragend', () => {
+          movingEl.classList.remove('dragging');
+          document.querySelectorAll('.target-slot').forEach(s => s.classList.remove('drag-over'));
+        });
+
+        area.appendChild(movingEl);
+        updateProgress();
+      });
+
+      for (let i = 0; i < TOTAL; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'scattered-piece';
+        piece.dataset.index = i;
+        piece.draggable = true;
+
+        const pos = positions[i];
+        piece.style.left = pos.x + 'px';
+        piece.style.top = pos.y + 'px';
+
+        // Each piece shows its own 1/9th crop of the image
+        piece.style.backgroundPosition = `${-(i % GRID) * PIECE_SZ}px ${-Math.floor(i / GRID) * PIECE_SZ}px`;
+        piece.style.backgroundSize = `${IMG_SZ}px ${IMG_SZ}px`;
+
+        piece.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', i);
+          e.dataTransfer.setData('fromSlot', 'area');
+          e.dataTransfer.effectAllowed = 'move';
+          piece.classList.add('dragging');
+        });
+
+        piece.addEventListener('dragend', () => {
+          piece.classList.remove('dragging');
+          document.querySelectorAll('.target-slot').forEach(s => s.classList.remove('drag-over'));
+        });
+
+        area.appendChild(piece);
+      }
+    }
+
+    /* ── Build progress dots ── */
+    function buildProgress() {
+      const track = document.getElementById('progressTrack');
+      track.innerHTML = '';
+      for (let i = 0; i < TOTAL; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        dot.dataset.slot = i;
+        dot.textContent = i + 1;
+        track.appendChild(dot);
+      }
+    }
+
+    function updateProgress() {
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach((dot, i) => {
+        if (slotMap[i] !== -1) {
+          dot.classList.add('filled');
+          dot.textContent = '❤';
+        } else {
+          dot.classList.remove('filled');
+          dot.textContent = i + 1;
+        }
+      });
+
+      // Reveal reference as more pieces placed
+      const ref = document.getElementById('frameRef');
+      const ratio = placedCount / TOTAL;
+      ref.style.opacity = 0.15 - (ratio * 0.12);
+    }
+
+    /* ── Win check ── */
+    function checkWin() {
+      if (placedCount < TOTAL) return;
+      const correct = slotMap.every((p, idx) => p === idx);
+      if (!correct) return;
+
+      triggerFlashSolve();
+      triggerShimmer();
+      document.getElementById('frameRef').classList.add('revealed');
+
+      setTimeout(() => { triggerBurst(); showCelebration(); }, 500);
+    }
+
+    /* ── Burst canvas ── */
+    const burstCanvas = document.getElementById('burstCanvas');
+    const bctx = burstCanvas.getContext('2d');
+    let burstParticles = [];
+
+    function resizeBurst() {
+      burstCanvas.width = window.innerWidth;
+      burstCanvas.height = window.innerHeight;
+    }
+    resizeBurst();
+    window.addEventListener('resize', resizeBurst);
+
+    function drawHeart(x, y, size, color, alpha, rot) {
+      bctx.save();
+      bctx.globalAlpha = alpha;
+      bctx.fillStyle = color;
+      bctx.translate(x, y);
+      bctx.rotate(rot);
+      bctx.beginPath();
+      bctx.moveTo(0, size * 0.3);
+      bctx.bezierCurveTo(-size/2, -size*0.3, -size, size*0.1, 0, size);
+      bctx.bezierCurveTo(size, size*0.1, size/2, -size*0.3, 0, size*0.3);
+      bctx.fill();
+      bctx.restore();
+    }
+
+    function animateBurst() {
+      bctx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+      burstParticles = burstParticles.filter(p => p.alpha > 0.02);
+      burstParticles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        p.vy += 0.1; p.vx *= 0.98;
+        p.rot += p.rotSpeed; p.alpha -= p.decay;
+        drawHeart(p.x, p.y, p.size, p.color, p.alpha, p.rot);
+      });
+      requestAnimationFrame(animateBurst);
+    }
+    animateBurst();
+
+    function spawnHearts(cx, cy, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 3 + Math.random() * 5;
+        burstParticles.push({
+          x: cx, y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 3,
+          size: 12 + Math.random() * 16,
+          alpha: 1, rot: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.2,
+          decay: 0.012 + Math.random() * 0.008,
+          color: ['#ff69b4','#ff1493','#ffd700','#ff6b81','#da70d6','#ff85a2'][Math.floor(Math.random() * 6)]
+        });
+      }
+    }
+
+    function triggerBurst() {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      spawnHearts(cx, cy, 40);
+      setTimeout(() => spawnHearts(cx - 100, cy - 50, 25), 130);
+      setTimeout(() => spawnHearts(cx + 100, cy - 50, 25), 260);
+    }
+
+    /* ── Celebration modal ── */
+    function showCelebration() {
+      const modal = document.getElementById('modal');
+      const modalHearts = document.getElementById('modalHearts');
+      const bouquetLeft = document.getElementById('bouquetLeft');
+      const bouquetRight = document.getElementById('bouquetRight');
+      const bouquetTexts = document.getElementById('bouquetTexts');
+      const petalRain = document.getElementById('petalRain');
+
+      // Clear previous
+      modalHearts.innerHTML = '';
+      bouquetLeft.innerHTML = '';
+      bouquetRight.innerHTML = '';
+      bouquetTexts.innerHTML = '';
+      petalRain.innerHTML = '';
+
+      const dImages = ['d1.jpg', 'd2.jpg', 'd3.jpg', 'd4.jpg'];
+      const flowerEmojis = ['🌸', '🌺', '🌷', '🌹', '💐', '🌻', '🌼'];
+
+      // Left: 3 flowers
+      [dImages[0], dImages[1], dImages[2]].forEach((img, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bouquet-flower';
+        wrapper.style.backgroundImage = `url('../images/${img}')`;
+        const emoji = document.createElement('span');
+        emoji.className = 'flower-emoji';
+        emoji.textContent = flowerEmojis[idx % flowerEmojis.length];
+        emoji.style.top = '-4px';
+        emoji.style.right = '-4px';
+        wrapper.appendChild(emoji);
+        bouquetLeft.appendChild(wrapper);
+      });
+
+      // Right: 3 flowers
+      [dImages[3], dImages[0], dImages[1]].forEach((img, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'bouquet-flower';
+        wrapper.style.backgroundImage = `url('../images/${img}')`;
+        const emoji = document.createElement('span');
+        emoji.className = 'flower-emoji';
+        emoji.textContent = flowerEmojis[(idx + 3) % flowerEmojis.length];
+        emoji.style.top = '-4px';
+        emoji.style.left = '-4px';
+        wrapper.appendChild(emoji);
+        bouquetRight.appendChild(wrapper);
+      });
+
+      // Love language texts
+      loveLanguages.forEach((txt, i) => {
+        const el = document.createElement('div');
+        el.className = 'bouquet-text';
+        el.textContent = txt;
+        el.style.animationDelay = `${0.6 + i * 0.35}s`;
+        bouquetTexts.appendChild(el);
+      });
+
+      // Floating hearts in background
+      const emojis = ['❤','💕','💗','💖','✨','🌟','💫'];
+      for (let i = 0; i < 25; i++) {
+        const h = document.createElement('div');
+        h.className = 'modal-heart';
+        h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        h.style.left = `${Math.random() * 100}%`;
+        h.style.fontSize = `${16 + Math.random() * 22}px`;
+        h.style.animationDuration = `${3 + Math.random() * 5}s`;
+        h.style.animationDelay = `${Math.random() * 2}s`;
+        modalHearts.appendChild(h);
+      }
+
+      // Flower petal rain
+      const petalColors = ['#ff69b4','#ff1493','#ffd1dc','#ffb6c1','#ffc0cb','#ff85a2'];
+      for (let i = 0; i < 40; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        const size = 8 + Math.random() * 14;
+        petal.style.width = size + 'px';
+        petal.style.height = size + 'px';
+        petal.style.background = petalColors[Math.floor(Math.random() * petalColors.length)];
+        petal.style.left = `${Math.random() * 100}%`;
+        petal.style.animationDuration = `${3 + Math.random() * 4}s`;
+        petal.style.animationDelay = `${Math.random() * 3}s`;
+        petalRain.appendChild(petal);
+      }
+
+      modal.classList.add('show');
+
+      const video = document.getElementById('bouquetVideo');
+      if (video) { video.play().catch(() => {}); }
+    }
+
+    /* ── Scramble ── */
+    function scramble() {
+      slotMap = Array.from({ length: TOTAL }, () => -1);
+      placedCount = 0;
+      const frame = document.getElementById('loveFrame');
+      frame.classList.remove('solved', 'flash-solve');
+      document.getElementById('frameRef').classList.remove('revealed');
+      document.getElementById('frameRef').style.opacity = '0.15';
+      // Reset shimmer
+      const shimmer = document.getElementById('shimmerSweep');
+      if (shimmer) { shimmer.classList.remove('active'); }
+      buildSlots();
+      buildPieces();
+      buildProgress();
+      // Re-trigger title spring bounce
+      document.querySelectorAll('.zone-title, .frame-title').forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetWidth;
+        el.style.animation = '';
+      });
+    }
+
+    /* ── Reset ── */
+    function resetGame() {
+      document.getElementById('modal').classList.remove('show');
+      const video = document.getElementById('bouquetVideo');
+      if (video) video.pause();
+      scramble();
+    }
+
+    /* ── Init ── */
+    initBackgroundHearts();
+    buildSparkleRing();
+    buildFireflies();
+    initMagneticDetection();
+    // Title spring bounce re-triggers on scramble
+    scramble();
+  </script>
+</body>
+</html>
