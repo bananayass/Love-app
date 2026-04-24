@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chúc Mừng! 💝</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/puzzle-result.css">
+</head>
+<body class="not-loaded">
+  <!-- Video pop-out overlay -->
+  <div class="video-pop-overlay" id="videoPopOverlay">
+    <div class="pop-container">
+      <video id="popVideo" src="../images/dance.mp4" autoplay muted playsinline></video>
+      <div class="floating-hearts" id="floatingHearts"></div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <h1 class="title">I LOVE U 💝</h1>
+
+  <!-- Flowers container -->
+  <div class="flowers">
+    <!-- Flower 1 - Left -->
+    <div class="flower flower--1">
+      <div class="flower__leafs flower__leafs--1">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__leaf flower__leaf--5"></div>
+        <div class="flower__leaf flower__leaf--6"></div>
+        <div class="flower__leaf flower__leaf--7"></div>
+        <div class="flower__leaf flower__leaf--8"></div>
+        <div class="flower__leaf flower__leaf--inner-1"></div>
+        <div class="flower__leaf flower__leaf--inner-2"></div>
+        <div class="flower__leaf flower__leaf--inner-3"></div>
+        <div class="flower__leaf flower__leaf--inner-4"></div>
+        <div class="flower__leaf flower__leaf--inner-5"></div>
+        <div class="flower__leaf flower__leaf--inner-6"></div>
+        <div class="flower__leaf flower__leaf--inner-7"></div>
+        <div class="flower__leaf flower__leaf--inner-8"></div>
+        <div class="flower__center"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+        <div class="flower__light flower__light--5"></div>
+        <div class="flower__light flower__light--6"></div>
+        <div class="flower__light flower__light--7"></div>
+        <div class="flower__light flower__light--8"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+        <div class="flower__line__leaf flower__line__leaf--5"></div>
+        <div class="flower__line__leaf flower__line__leaf--6"></div>
+      </div>
+    </div>
+
+    <!-- Flower 2 - Center -->
+    <div class="flower flower--2">
+      <div class="flower__leafs flower__leafs--2">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__leaf flower__leaf--5"></div>
+        <div class="flower__leaf flower__leaf--6"></div>
+        <div class="flower__leaf flower__leaf--7"></div>
+        <div class="flower__leaf flower__leaf--8"></div>
+        <div class="flower__leaf flower__leaf--inner-1"></div>
+        <div class="flower__leaf flower__leaf--inner-2"></div>
+        <div class="flower__leaf flower__leaf--inner-3"></div>
+        <div class="flower__leaf flower__leaf--inner-4"></div>
+        <div class="flower__leaf flower__leaf--inner-5"></div>
+        <div class="flower__leaf flower__leaf--inner-6"></div>
+        <div class="flower__leaf flower__leaf--inner-7"></div>
+        <div class="flower__leaf flower__leaf--inner-8"></div>
+        <div class="flower__center"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+        <div class="flower__light flower__light--5"></div>
+        <div class="flower__light flower__light--6"></div>
+        <div class="flower__light flower__light--7"></div>
+        <div class="flower__light flower__light--8"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
+    </div>
+
+    <!-- Flower 3 - Right -->
+    <div class="flower flower--3">
+      <div class="flower__leafs flower__leafs--3">
+        <div class="flower__leaf flower__leaf--1"></div>
+        <div class="flower__leaf flower__leaf--2"></div>
+        <div class="flower__leaf flower__leaf--3"></div>
+        <div class="flower__leaf flower__leaf--4"></div>
+        <div class="flower__leaf flower__leaf--5"></div>
+        <div class="flower__leaf flower__leaf--6"></div>
+        <div class="flower__leaf flower__leaf--7"></div>
+        <div class="flower__leaf flower__leaf--8"></div>
+        <div class="flower__leaf flower__leaf--inner-1"></div>
+        <div class="flower__leaf flower__leaf--inner-2"></div>
+        <div class="flower__leaf flower__leaf--inner-3"></div>
+        <div class="flower__leaf flower__leaf--inner-4"></div>
+        <div class="flower__leaf flower__leaf--inner-5"></div>
+        <div class="flower__leaf flower__leaf--inner-6"></div>
+        <div class="flower__leaf flower__leaf--inner-7"></div>
+        <div class="flower__leaf flower__leaf--inner-8"></div>
+        <div class="flower__center"></div>
+        <div class="flower__light flower__light--1"></div>
+        <div class="flower__light flower__light--2"></div>
+        <div class="flower__light flower__light--3"></div>
+        <div class="flower__light flower__light--4"></div>
+        <div class="flower__light flower__light--5"></div>
+        <div class="flower__light flower__light--6"></div>
+        <div class="flower__light flower__light--7"></div>
+        <div class="flower__light flower__light--8"></div>
+      </div>
+      <div class="flower__line">
+        <div class="flower__line__leaf flower__line__leaf--1"></div>
+        <div class="flower__line__leaf flower__line__leaf--2"></div>
+        <div class="flower__line__leaf flower__line__leaf--3"></div>
+        <div class="flower__line__leaf flower__line__leaf--4"></div>
+      </div>
+    </div>
+
+    <!-- Long leaf stem -->
+    <div class="grow-ans" style="--d:1.2s">
+      <div class="flower__g-long">
+        <div class="flower__g-long__top"></div>
+        <div class="flower__g-long__bottom"></div>
+      </div>
+    </div>
+
+    <!-- Grass 1 -->
+    <div class="growing-grass">
+      <div class="flower__grass flower__grass--1">
+        <div class="flower__grass--top"></div>
+        <div class="flower__grass--bottom"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--1"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--2"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--3"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--4"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--5"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--6"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--7"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--8"></div>
+        <div class="flower__grass__overlay"></div>
+      </div>
+    </div>
+
+    <!-- Grass 2 -->
+    <div class="growing-grass">
+      <div class="flower__grass flower__grass--2">
+        <div class="flower__grass--top"></div>
+        <div class="flower__grass--bottom"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--1"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--2"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--3"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--4"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--5"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--6"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--7"></div>
+        <div class="flower__grass__leaf flower__grass__leaf--8"></div>
+        <div class="flower__grass__overlay"></div>
+      </div>
+    </div>
+
+    <!-- Long leaves groups -->
+    <div class="long-g long-g--0">
+      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:2.2s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:3.4s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--1">
+      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:3.8s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--2">
+      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--3">
+      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--4">
+      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--5">
+      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--6">
+      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:4.8s"><div class="leaf leaf--3"></div></div>
+    </div>
+
+    <div class="long-g long-g--7">
+      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div>
+      <div class="grow-ans" style="--d:3.2s"><div class="leaf leaf--1"></div></div>
+      <div class="grow-ans" style="--d:3.5s"><div class="leaf leaf--2"></div></div>
+      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+    </div>
+  </div>
+
+  <!-- Rain effect container -->
+  <div class="rain-effect" id="rainEffect"></div>
+
+  <!-- Replay button -->
+  <button class="replay-btn" onclick="playAgain()">🔄 Chơi Lại</button>
+
+  <script>
+    function init() {
+      const videoPopOverlay = document.getElementById('videoPopOverlay');
+      const popVideo = document.getElementById('popVideo');
+
+      videoPopOverlay.classList.add('active');
+      popVideo.play().catch(() => {});
+      populateFloatingHearts();
+
+      setTimeout(() => {
+        videoPopOverlay.classList.add('hiding');
+        popVideo.pause();
+        setTimeout(() => {
+          videoPopOverlay.classList.remove('active', 'hiding');
+        }, 500);
+        document.body.classList.remove('not-loaded');
+        createRainEffects();
+      }, 3000);
+    }
+
+    function populateFloatingHearts() {
+      const container = document.getElementById('floatingHearts');
+      if (!container) return;
+      container.innerHTML = '';
+      const hearts = ['💕', '💖', '💗', '💓', '🩷', '🤍', '💜', '🩵', '⭐', '🌟'];
+      for (let i = 0; i < 25; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-float';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDuration = `${2 + Math.random() * 3}s`;
+        heart.style.animationDelay = `${Math.random() * 2}s`;
+        container.appendChild(heart);
+      }
+    }
+
+    function createRainEffects() {
+      const container = document.getElementById('rainEffect');
+      const stars = ['★', '✦', '✧', '☆', '⭐', '🌟', '✨'];
+      const images = ['../images/d1.jpg', '../images/d2.jpg', '../images/d3.jpg', '../images/d4.jpg'];
+
+      for (let i = 0; i < 60; i++) {
+        const item = document.createElement('div');
+        item.className = 'rain-item';
+        item.style.left = `${Math.random() * 100}%`;
+        item.style.animationDelay = `${Math.random() * 4}s`;
+
+        const rand = Math.random();
+        if (rand < 0.4) {
+          item.classList.add('star');
+          item.textContent = stars[Math.floor(Math.random() * stars.length)];
+          item.style.fontSize = (20 + Math.random() * 30) + 'px';
+        } else {
+          const img = document.createElement('img');
+          img.src = images[Math.floor(Math.random() * images.length)];
+          img.style.width = (30 + Math.random() * 40) + 'px';
+          img.style.height = (30 + Math.random() * 40) + 'px';
+          item.appendChild(img);
+        }
+        container.appendChild(item);
+      }
+    }
+
+    function playAgain() {
+      window.location.reload();
+    }
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
