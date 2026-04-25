@@ -840,6 +840,83 @@ body {
 }
 
 /* ════════════════════════════════════════════════════════════════
+   BACKGROUND HEART + RING ANIMATION (heartbeat synced, pink only)
+══════════════════════════════════════════════════════════════ */
+.heart-ring-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.bg-heart-item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bgHeartFade 2.5s ease-out forwards;
+}
+
+.heart-core {
+  font-size: 20px;
+  animation: heartBeat 1.2s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+.heart-ring-anim {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(255, 105, 180, 0.6);
+  border-radius: 50%;
+  animation: ringPulse 1.2s ease-out infinite;
+}
+
+/* Bling bling sparkles around heart */
+.heart-core::before,
+.heart-core::after {
+  content: '✨';
+  position: absolute;
+  font-size: 10px;
+  animation: blingRotate 1.2s linear infinite;
+}
+
+.heart-core::before {
+  top: -8px;
+  left: -8px;
+}
+
+.heart-core::after {
+  bottom: -8px;
+  right: -8px;
+  animation-delay: 0.6s;
+}
+
+@keyframes blingRotate {
+  0% { transform: rotate(0deg) scale(1); opacity: 1; }
+  50% { transform: rotate(180deg) scale(1.5); opacity: 0.8; }
+  100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes bgHeartFade {
+  0% { opacity: 0; transform: scale(0); }
+  15% { opacity: 1; transform: scale(1); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.8); }
+}
+
+/* ════════════════════════════════════════════════════════════════
    RAIN STARS AND IMAGES
 ══════════════════════════════════════════════════════════════ */
 .rain-effect {
@@ -854,7 +931,7 @@ body {
   position: absolute;
   top: -120px;
   opacity: 0;
-  animation: rain-fall 12s ease-out forwards;
+  animation: rain-fall 7s ease-out forwards;
 }
 
 @keyframes rain-fall {

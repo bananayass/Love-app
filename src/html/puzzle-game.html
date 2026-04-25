@@ -194,90 +194,7 @@
       }
     }
 
-    /* ════════════════════════════════════════════════════════════════
-       ANIMATION 6: CORNER RIBBON BOW — decorative bow on top of frame
-       A CSS-only bow made from two rotated ellipses and a center knot.
-       The bow sits at the top-center of the frame and gently sways
-       left-right with a subtle rotation animation. Ribbon tails hang
-       down with a wavy undulation using mismatched animation durations.
-    ════════════════════════════════════════════════════════════════ */
-    .ribbon-bow {
-      position: absolute;
-      top: -38px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .bow-center {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      background: radial-gradient(circle, #ff6b8a 0%, #e91e63 100%);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 2px 6px rgba(233, 30, 99, 0.4);
-      z-index: 3;
-    }
-
-    .bow-loop {
-      position: absolute;
-      width: 38px;
-      height: 28px;
-      background: linear-gradient(135deg, #ff85a2 0%, #e91e63 50%, #ff6b8a 100%);
-      border-radius: 50%;
-      top: 0;
-      box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.15), 2px 3px 8px rgba(233, 30, 99, 0.3);
-      animation: bowSway 2.8s ease-in-out infinite;
-    }
-
-    .bow-loop.left {
-      right: 50%;
-      transform: translateX(-70%) rotate(-28deg);
-      animation-delay: 0s;
-    }
-
-    .bow-loop.right {
-      left: 50%;
-      transform: translateX(70%) rotate(28deg);
-      animation-delay: 0.3s;
-    }
-
-    @keyframes bowSway {
-      0%, 100% { transform: translateX(-70%) rotate(-28deg); }
-      50% { transform: translateX(-70%) rotate(-22deg); }
-    }
-
-    .bow-tail {
-      position: absolute;
-      width: 14px;
-      height: 52px;
-      background: linear-gradient(to bottom, #e91e63 0%, #f48fb1 60%, #ffcdd9 100%);
-      top: 22px;
-      border-radius: 0 0 50% 50%;
-      transform-origin: top center;
-      animation: tailWave 2.1s ease-in-out infinite;
-    }
-
-    .bow-tail.left {
-      left: 0;
-      transform: rotate(12deg);
-    }
-
-    .bow-tail.right {
-      right: 0;
-      transform: rotate(-12deg);
-      animation-delay: 0.2s;
-    }
-
-    @keyframes tailWave {
-      0%, 100% { transform: rotate(12deg); }
-      50% { transform: rotate(17deg); }
-    }
-
+    
     /* ════════════════════════════════════════════════════════════════
        ANIMATION 8: HEART CONSTELLATION — progress dots connect into heart
        Progress dots (1–9) when filled sequentially trace a heart shape
@@ -2432,15 +2349,7 @@
     <div class="right-zone">
       <div class="frame-title" style="--delay:0.15s">✨ Ghép hình nào ✨</div>
       <div class="love-frame" id="loveFrame">
-        <!-- Ribbon bow decoration (Animation 6) -->
-        <div class="ribbon-bow">
-          <div class="bow-tail left"></div>
-          <div class="bow-tail right"></div>
-          <div class="bow-loop left"></div>
-          <div class="bow-loop right"></div>
-          <div class="bow-center"></div>
-        </div>
-        <!-- Shimmer sweep (Animation 12) -->
+                <!-- Shimmer sweep (Animation 12) -->
         <div class="shimmer-sweep" id="shimmerSweep"></div>
         <!-- Sparkle shimmer border (Animation 5) -->
         <div class="sparkle-ring" id="sparkleRing"></div>

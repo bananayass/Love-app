@@ -312,6 +312,9 @@
     </div>
   </div>
 
+  <!-- Heart with ring animation container -->
+  <div class="heart-ring-bg" id="heartRingBg"></div>
+
   <!-- Rain effect container -->
   <div class="rain-effect" id="rainEffect"></div>
 
@@ -319,25 +322,59 @@
   <button class="replay-btn" onclick="playAgain()">💖 Click vào đây nè</button>
 
   <script>
-    function init() {
-      const videoPopOverlay = document.getElementById('videoPopOverlay');
+    // Random heart+ring spawn on background (pink only)
+    function spawnHeartRing() {
+      const container = document.getElementById('heartRingBg');
+      const pinkHearts = ['💕', '💖', '💗', '💓', '🩷'];
+      const heart = document.createElement('div');
+      heart.className = 'bg-heart-item';
+      heart.innerHTML = `<span class="heart-core">${pinkHearts[Math.floor(Math.random() * pinkHearts.length)]}</span><span class="heart-ring-anim"></span>`;
+      heart.style.left = `${5 + Math.random() * 85}%`;
+      heart.style.top = `${5 + Math.random() * 80}%`;
+      container.appendChild(heart);
+      setTimeout(() => heart.remove(), 2500);
+    }
+
+    function startHeartRingLoop() {
+      spawnHeartRing();
+      setInterval(() => {
+        if (Math.random() > 0.4) spawnHeartRing();
+      }, 400 + Math.random() * 600);
+    }
+
+    // Background click -> pop flower (not on flowers/replay-btn/rain)
+    document.getElementById('heartRingBg').addEventListener('click', (e) => {
+      const flower = e.target.closest('.flower');
+      if (!flower) showPopOut();
+    });
+
+    function showPopOut() {
+      const overlay = document.getElementById('videoPopOverlay');
       const popVideo = document.getElementById('popVideo');
-
-      videoPopOverlay.classList.add('active');
+      overlay.classList.add('active');
       popVideo.play().catch(() => { });
-      populateOverlayDecor();
-
       setTimeout(() => {
-        videoPopOverlay.classList.add('hiding');
+        overlay.classList.add('hiding');
         popVideo.pause();
         setTimeout(() => {
-          videoPopOverlay.classList.remove('active', 'hiding');
+          overlay.classList.remove('active', 'hiding');
+          document.body.classList.remove('not-loaded');
+          createRainEffects();
+          createFloatingBGDecor();
         }, 500);
-        document.body.classList.remove('not-loaded');
-        createRainEffects();
-        createFloatingBGDecor();
       }, 3000);
     }
+
+    function playAgain() {
+      window.location.href = '../html/anniversary.html';
+    }
+
+    window.addEventListener('load', () => {
+      document.body.classList.remove('not-loaded');
+      startHeartRingLoop();
+      createRainEffects();
+      createFloatingBGDecor();
+    });
 
     function populateOverlayDecor() {
       const container = document.getElementById('overlayDecor');
@@ -408,7 +445,10 @@
       window.location.href = '../html/anniversary.html';
     }
 
-    window.addEventListener('load', init);
+    // Auto popup on page load
+    window.addEventListener('load', () => {
+      showPopOut();
+    });
   </script>
 </body>
 
