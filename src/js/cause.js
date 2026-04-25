@@ -83,7 +83,7 @@ function displayNewReason() {
                             opacity: 0,
                             duration: 1,
                             onComplete: () => {
-                                window.location.href = '../html/anniversary.html'; // Replace with the actual URL of the next page
+                                window.location.href = '../html/puzzle-game.html';
                             }
                         });
                     });
@@ -145,4 +145,4 @@ document.addEventListener('mousemove', (e) => {
 });
 
 // Create initial floating elements
-setInterval(createFloatingElement, 2000);
+setInterval(createFloatingElement, 500);

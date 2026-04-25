@@ -114,6 +114,7 @@
       background: linear-gradient(135deg, #fff0f5, #ffe4ec, #ffd6e8);
       border-radius: 20px;
       border: 3px solid rgba(255, 105, 180, 0.5);
+      z-index: 1;
       box-shadow:
         0 0 0 6px rgba(255, 105, 180, 0.15),
         0 0 0 10px rgba(255, 105, 180, 0.08),
@@ -202,10 +203,10 @@
     ════════════════════════════════════════════════════════════════ */
     .ribbon-bow {
       position: absolute;
-      top: -32px;
+      top: -38px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 20;
+      z-index: 5;
       pointer-events: none;
     }
 
@@ -246,15 +247,8 @@
     }
 
     @keyframes bowSway {
-
-      0%,
-      100% {
-        transform: translateX(-70%) rotate(-28deg);
-      }
-
-      50% {
-        transform: translateX(-70%) rotate(-22deg);
-      }
+      0%, 100% { transform: translateX(-70%) rotate(-28deg); }
+      50% { transform: translateX(-70%) rotate(-22deg); }
     }
 
     .bow-tail {
@@ -265,31 +259,23 @@
       top: 22px;
       border-radius: 0 0 50% 50%;
       transform-origin: top center;
+      animation: tailWave 2.1s ease-in-out infinite;
     }
 
     .bow-tail.left {
       left: 0;
       transform: rotate(12deg);
-      animation: tailWave 2.1s ease-in-out infinite;
     }
 
     .bow-tail.right {
       right: 0;
       transform: rotate(-12deg);
-      animation: tailWave 2.4s ease-in-out infinite;
       animation-delay: 0.2s;
     }
 
     @keyframes tailWave {
-
-      0%,
-      100% {
-        transform: rotate(12deg);
-      }
-
-      50% {
-        transform: rotate(17deg);
-      }
+      0%, 100% { transform: rotate(12deg); }
+      50% { transform: rotate(17deg); }
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -448,6 +434,7 @@
       animation: titleSpring 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
       animation-delay: var(--delay, 0.2s);
       opacity: 0;
+      z-index: 30;
     }
 
     /* ════════════════════════════════════════════════════════════════
@@ -645,6 +632,8 @@
       flex-direction: column;
       align-items: center;
       gap: 14px;
+      position: relative;
+      padding-top: 80px;
     }
 
 
@@ -3061,10 +3050,8 @@
 
     /* ── Celebration - Open result page ── */
     function showCelebration() {
-      // Open puzzle-result.html in new tab
-      window.open('puzzle-result.html', '_blank');
-      // Still trigger visual effects on current page
-      triggerBurst();
+      // Redirect to puzzle-result.html
+      window.location.href = 'puzzle-result.html';
     }
 
     /* ── Scramble ── */

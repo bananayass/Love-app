@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chúc Mừng! 💝</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../css/puzzle-result.css">
 </head>
+
 <body class="not-loaded">
   <!-- Video pop-out overlay -->
   <div class="video-pop-overlay" id="videoPopOverlay">
+    <!-- Floating hearts & leaves on main background -->
+    <div class="overlay-decor" id="overlayDecor"></div>
+    <!-- Simple pop-container -->
     <div class="pop-container">
+      <!-- Main video -->
       <video id="popVideo" src="../images/dance.mp4" autoplay muted playsinline></video>
-      <div class="floating-hearts" id="floatingHearts"></div>
+      <!-- Text BELOW video -->
+      <div class="video-text-overlay">
+        <span class="text-sparkle">✨</span>
+        <span class="main-text">Bé iu giỏi quá</span>
+        <span class="heart-text">
+          <span class="text-sparkle">✨</span>
+      </div>
     </div>
   </div>
 
@@ -178,59 +192,123 @@
 
     <!-- Long leaves groups -->
     <div class="long-g long-g--0">
-      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:2.2s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:3.4s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:3s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:2.2s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.4s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.6s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--1">
-      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:3.8s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:3.6s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.8s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:4s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.2s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--2">
-      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:4s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.2s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.4s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.6s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--3">
-      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:4s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.2s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:3s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.6s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--4">
-      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:4s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.2s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:3s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.6s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--5">
-      <div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:4s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.2s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:3s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.6s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--6">
-      <div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:4.8s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:4.2s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.4s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.6s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:4.8s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
 
     <div class="long-g long-g--7">
-      <div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div>
-      <div class="grow-ans" style="--d:3.2s"><div class="leaf leaf--1"></div></div>
-      <div class="grow-ans" style="--d:3.5s"><div class="leaf leaf--2"></div></div>
-      <div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div>
+      <div class="grow-ans" style="--d:3s">
+        <div class="leaf leaf--0"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.2s">
+        <div class="leaf leaf--1"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.5s">
+        <div class="leaf leaf--2"></div>
+      </div>
+      <div class="grow-ans" style="--d:3.6s">
+        <div class="leaf leaf--3"></div>
+      </div>
     </div>
   </div>
 
@@ -238,7 +316,7 @@
   <div class="rain-effect" id="rainEffect"></div>
 
   <!-- Replay button -->
-  <button class="replay-btn" onclick="playAgain()">🔄 Chơi Lại</button>
+  <button class="replay-btn" onclick="playAgain()">💖 Click vào đây nè</button>
 
   <script>
     function init() {
@@ -246,8 +324,8 @@
       const popVideo = document.getElementById('popVideo');
 
       videoPopOverlay.classList.add('active');
-      popVideo.play().catch(() => {});
-      populateFloatingHearts();
+      popVideo.play().catch(() => { });
+      populateOverlayDecor();
 
       setTimeout(() => {
         videoPopOverlay.classList.add('hiding');
@@ -257,22 +335,25 @@
         }, 500);
         document.body.classList.remove('not-loaded');
         createRainEffects();
+        createFloatingBGDecor();
       }, 3000);
     }
 
-    function populateFloatingHearts() {
-      const container = document.getElementById('floatingHearts');
+    function populateOverlayDecor() {
+      const container = document.getElementById('overlayDecor');
       if (!container) return;
       container.innerHTML = '';
-      const hearts = ['💕', '💖', '💗', '💓', '🩷', '🤍', '💜', '🩵', '⭐', '🌟'];
-      for (let i = 0; i < 25; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'heart-float';
-        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-        heart.style.left = `${Math.random() * 100}%`;
-        heart.style.animationDuration = `${2 + Math.random() * 3}s`;
-        heart.style.animationDelay = `${Math.random() * 2}s`;
-        container.appendChild(heart);
+
+      const items = ['💕', '💖', '💗', '💓', '🩷', '💜', '🩵', '🍃', '🌿', '☘️', '🍂', '🌸'];
+      for (let i = 0; i < 50; i++) {
+        const item = document.createElement('div');
+        item.className = 'overlay-decor-item';
+        item.textContent = items[Math.floor(Math.random() * items.length)];
+        item.style.left = `${Math.random() * 100}%`;
+        item.style.animationDuration = `${4 + Math.random() * 6}s`;
+        item.style.animationDelay = `${Math.random() * 4}s`;
+        item.style.fontSize = `${28 + Math.random() * 28}px`;
+        container.appendChild(item);
       }
     }
 
@@ -280,34 +361,55 @@
       const container = document.getElementById('rainEffect');
       const stars = ['★', '✦', '✧', '☆', '⭐', '🌟', '✨'];
       const images = ['../images/d1.jpg', '../images/d2.jpg', '../images/d3.jpg', '../images/d4.jpg'];
+      const leaves = ['🍃', '🌿', '☘️', '🍂'];
 
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 40; i++) {
         const item = document.createElement('div');
         item.className = 'rain-item';
         item.style.left = `${Math.random() * 100}%`;
-        item.style.animationDelay = `${Math.random() * 4}s`;
+        item.style.animationDelay = `${Math.random() * 6}s`;
 
         const rand = Math.random();
-        if (rand < 0.4) {
+        if (rand < 0.3) {
           item.classList.add('star');
           item.textContent = stars[Math.floor(Math.random() * stars.length)];
           item.style.fontSize = (20 + Math.random() * 30) + 'px';
+        } else if (rand < 0.5) {
+          item.classList.add('leaf');
+          item.textContent = leaves[Math.floor(Math.random() * leaves.length)];
+          item.style.fontSize = (24 + Math.random() * 20) + 'px';
         } else {
           const img = document.createElement('img');
           img.src = images[Math.floor(Math.random() * images.length)];
-          img.style.width = (30 + Math.random() * 40) + 'px';
-          img.style.height = (30 + Math.random() * 40) + 'px';
+          img.style.width = (50 + Math.random() * 60) + 'px';
+          img.style.height = (50 + Math.random() * 60) + 'px';
           item.appendChild(img);
         }
         container.appendChild(item);
       }
     }
 
+    function createFloatingBGDecor() {
+      const container = document.getElementById('rainEffect');
+      if (!container) return;
+      const hearts = ['💕', '💖', '💗', '💓', '🩷', '💜', '🩵'];
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'bg-float-heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.fontSize = `${18 + Math.random() * 16}px`;
+        heart.style.animationDelay = `${Math.random() * 3}s`;
+        container.appendChild(heart);
+      }
+    }
+
     function playAgain() {
-      window.location.reload();
+      window.location.href = '../html/anniversary.html';
     }
 
     window.addEventListener('load', init);
   </script>
 </body>
+
 </html>
