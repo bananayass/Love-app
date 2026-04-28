@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Idea Picker 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/date-idea-picker.css">
+</head>
+<body>
+  <!-- Floating sparkles background -->
+  <div class="sparkles-bg" id="sparklesBg"></div>
+
+  <!-- Fireworks particles container -->
+  <div class="fireworks-container" id="fireworksContainer"></div>
+
+  <!-- Main content -->
+  <div class="container">
+    <h1 class="title">🎯 Date Idea Picker 💕</h1>
+
+    <!-- Category filters -->
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-category="all">✨ All</button>
+      <button class="filter-btn" data-category="indoor">🏠 Indoor</button>
+      <button class="filter-btn" data-category="outdoor">🌳 Outdoor</button>
+      <button class="filter-btn" data-category="budget">💰 Budget</button>
+    </div>
+
+    <!-- Heart button -->
+    <div class="heart-btn" id="heartBtn">
+      <span class="heart-emoji">💖</span>
+    </div>
+
+    <!-- Date card (hidden initially) -->
+    <div class="date-card" id="dateCard">
+      <div class="card-icon" id="cardIcon">🎬</div>
+      <div class="card-text" id="cardText">Movie night 🍿</div>
+    </div>
+
+    <!-- Pick another button -->
+    <button class="pick-another-btn" id="pickAnotherBtn" style="display:none;">🎲 Pick Another</button>
+  </div>
+
+  <script>
+    const ideas = {
+      indoor: [
+        { text: "Movie night 🍿", icon: "🎬" },
+        { text: "Cooking together 👩‍🍳", icon: "🍳" },
+        { text: "Indoor picnic 🧺", icon: "🪑" },
+        { text: "Board games night 🎲", icon: "🎮" },
+        { text: "Spa night 🕯️", icon: "🛁" },
+        { text: "Dance together 💃", icon: "💃" },
+        { text: "Do a puzzle together 🧩", icon: "🧩" },
+      ],
+      outdoor: [
+        { text: "Park walk 🌳", icon: "🚶" },
+        { text: "Sunset picnic 🌅", icon: "🌅" },
+        { text: "Bike ride 🚴", icon: "🚴" },
+        { text: "Beach trip 🏖️", icon: "🏖️" },
+        { text: "Stargazing ⭐", icon: "🌟" },
+        { text: "Picnic date 🧺", icon: "🌳" },
+        { text: "Night market stroll 🏮", icon: "🏮" },
+      ],
+      budget: [
+        { text: "Free museum day 🏛️", icon: "🏛️" },
+        { text: "Home picnic 🧺", icon: "🏠" },
+        { text: "Window shopping 🛍️", icon: "🛍️" },
+        { text: "Sunset viewing 🌅", icon: "🌅" },
+        { text: "Star gazing ⭐", icon: "🌌" },
+        { text: "Library date 📚", icon: "📖" },
+        { text: "Coffee walk ☕", icon: "☕" },
+      ]
+    };
+
+    let currentCategory = 'all';
+    let pickedHistory = [];
+
+    // Init sparkles background
+    function initSparkles() {
+      const container = document.getElementById('sparklesBg');
+      const sparkles = ['✨', '💫', '⭐', '🌟', '✦'];
+      for (let i = 0; i < 30; i++) {
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        s.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.fontSize = (10 + Math.random() * 15) + 'px';
+        s.style.animationDelay = Math.random() * 5 + 's';
+        container.appendChild(s);
+      }
+    }
+
+    // Spawn fireworks
+    function spawnFireworks() {
+      const container = document.getElementById('fireworksContainer');
+      container.innerHTML = '';
+      const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffd700', '#ff85a2'];
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.className = 'firework-particle';
+        const angle = (Math.random() * 360) * (Math.PI / 180);
+        const distance = 80 + Math.random() * 120;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        p.style.setProperty('--tx', tx + 'px');
+        p.style.setProperty('--ty', ty + 'px');
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = '50%';
+        p.style.top = '50%';
+        p.style.animationDelay = (Math.random() * 0.3) + 's';
+        container.appendChild(p);
+      }
+      setTimeout(() => container.innerHTML = '', 1500);
+    }
+
+    // Get random idea
+    function getRandomIdea() {
+      let pool = [];
+      if (currentCategory === 'all') {
+        pool = [...ideas.indoor, ...ideas.outdoor, ...ideas.budget];
+      } else {
+        pool = ideas[currentCategory];
+      }
+      const available = pool.filter(i => !pickedHistory.includes(i.text));
+      if (available.length === 0) {
+        pickedHistory = [];
+        return pool[Math.floor(Math.random() * pool.length)];
+      }
+      return available[Math.floor(Math.random() * available.length)];
+    }
+
+    // Show date card with animation
+    function showDateCard(idea) {
+      const card = document.getElementById('dateCard');
+      const cardIcon = document.getElementById('cardIcon');
+      const cardText = document.getElementById('cardText');
+      const pickBtn = document.getElementById('pickAnotherBtn');
+
+      card.classList.remove('flip-in');
+      void card.offsetWidth;
+      cardIcon.textContent = idea.icon;
+      cardText.textContent = idea.text;
+      card.classList.add('flip-in');
+      pickBtn.style.display = 'block';
+    }
+
+    // Pick handler
+    function pickIdea() {
+      spawnFireworks();
+      setTimeout(() => {
+        const idea = getRandomIdea();
+        pickedHistory.push(idea.text);
+        showDateCard(idea);
+      }, 600);
+    }
+
+    // Filter handlers
+    document.getElementById('filters').addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentCategory = e.target.dataset.category;
+        pickedHistory = [];
+        const card = document.getElementById('dateCard');
+        const pickBtn = document.getElementById('pickAnotherBtn');
+        card.classList.remove('flip-in');
+        pickBtn.style.display = 'none';
+      }
+    });
+
+    // Heart click
+    document.getElementById('heartBtn').addEventListener('click', pickIdea);
+    document.getElementById('pickAnotherBtn').addEventListener('click', pickIdea);
+
+    initSparkles();
+  </script>
+</body>
+</html>

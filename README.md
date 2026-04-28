@@ -5,7 +5,7 @@ A romantic, multi-page birthday website for a girlfriend. Flows through 5 pages 
 ## Page Flow
 
 ```
-locket.html → index.html → birthday.html → profile.html → music.html → cause.html → last.html
+locket.html → index.html → birthday.html → quiz.html → profile.html → music.html → cause.html → puzzle-game.html → puzzle-result.html → anniversary.html → last.html
 ```
 
 ---
@@ -33,16 +33,23 @@ Asks "Em có yêu anh hemmmmmmmm?" with growing Yes button and dodging No button
 - **CSS animations:** `flicker` keyframe on flames (flicker + rotate micro-movements) | `blowOut` keyframe (scaleY up, scaleX squeeze, fade) | `cardReveal` keyframe (scale + translateY) | `lineReveal` keyframe (staggered opacity + translateY per wish line) | `hintPulse` keyframe (opacity 0.5→1 pulse)
 - **Canvas effects:** Heart particle burst on blow (canvas, `requestAnimationFrame` loop, bezier heart drawing)
 - **CSS confetti:** Lightweight CSS-only falling confetti rectangles, no canvas overhead
-- **Interaction:** Click cake OR "💨 Thổi nến 💨" button (appears after 4s) → flames blow out with staggered smoke puffs → wish card scales in with staggered text line reveals → party button fires burst, link to `profile.html`
+- **Interaction:** Click cake OR "💨 Thổi nến 💨" button (appears after 4s) → flames blow out with staggered smoke puffs → wish card scales in with staggered text line reveals → party button fires burst, link to `quiz.html`
 - **SVG elements:** 3-layer cake with frosting drip paths, cherry (radial gradient + stem path), sprinkles (rects with rotate transforms), heart decorations (bezier path), star decorations (polygon points), cake board (ellipse)
 - **Key CSS:** `@keyframes gradientFlow` (background), `confFall` (CSS confetti), `smokeRise` | CSS `radial-gradient` for flames, `linear-gradient` for frosting
 
-### 4. `src/html/profile.html` — Love Profile
-Accessible from birthday.html. Floating hearts background, rose petals, profile card with photo, love note, and continue button linking to `music.html`.
+### 4. `src/html/quiz.html` — Hello Kitty Quiz
+Hello Kitty-themed couples quiz. 10 questions about the relationship.
+- **CSS:** `quiz.css` — pink polka dot background, Hello Kitty image, floating hearts/stars/Kitty popups, glassmorphism card, pill buttons
+- **JS:** `quiz.js` — slide-in/out card transitions, correct/wrong answer feedback, floating heart bursts, result screen with score
+- **Interaction:** Answer 10 questions → score result → retry or continue to `profile.html`
+- **Key CSS:** `@keyframes floatUp`, `kittyFloat`, `cardSlideIn`, `heartBeat` | polka dot bg | floating Kitty decorations
+
+### 5. `src/html/profile.html` — Love Profile
+Accessible from quiz.html. Floating hearts background, rose petals, profile card with photo, love note, and continue button linking to `music.html`.
 - **CSS:** `profile.css` — floating hearts, rose petals, photo frame, habits grid, love note card
 - **JS:** `profile.js` — floating hearts + petals generator, heart cursor trail, days-together counter, continue button navigation to `music.html`
 
-### 5. `src/html/music.html` — Music Player
+### 6. `src/html/music.html` — Music Player
 Pink-themed interactive playlist player. 15 songs from a shared Spotify playlist, each with a Spotify embed for 30-second previews.
 - **CSS animations:** Vinyl record deck with spinning disc + tonearm (activates on play) | Pulsing deck glow ring | Heartbeat text animation on track title | Speaker stack bars | 15-bar sound visualizer above deck | 12-bar side EQ columns (left + right) | 25 floating music notes (♪♫♬🎵🎶) | Floating hearts | Wave rings (expanding circles from center) | Blob background overlays
 - **Listening mode (all animations intensify when a track is playing):** Vinyl spins at 2s/rev | Wave rings speed up (0.6s interval) | Side EQ bars switch to darker magenta gradient, double speed | Floating notes accelerate | Deck glow ring pulses around platter | Deck title does heartbeat scale | Speaker bars speed up
@@ -52,11 +59,23 @@ Pink-themed interactive playlist player. 15 songs from a shared Spotify playlist
 - **Tracks:** 15 songs — Gps Remix, bồ em, Thích Em Hơi Nhiều, Ooh Just You, Hông Về Tình Iu, Tay To, GETCHA LOVE, Ai Đưa Em Về, Muốn Được Cùng Em, Yêu 5, Giấc Mơ Rất Thơ, When You Look at Me, Hướng Dương, Matchanah, Tình Ca Tình Ta
 - **Key CSS:** `@keyframes spin`, `deckPulse`, `heartBeat`, `waveExpand`, `floatNote`, `sideBounce`, `vizPulse`, `spPulse` | Pink gradient background (`#fce7f3 → #f472b6`) | Glassmorphism player card | CSS-only animations throughout
 
-### 6. `src/html/cause.html` — Cause Page
+### 7. `src/html/cause.html` — Cause Page
 - **CSS:** `cause.css`
-- **JS:** `cause.js`
+- **JS:** `cause.js` — navigation links to `puzzle-game.html`
 
-### 7. `src/html/last.html` — Love Letter
+### 8. `src/html/puzzle-game.html` — Puzzle Game
+Interactive puzzle minigame.
+- **JS:** `puzzle-game.js` — redirects to `puzzle-result.html` on completion
+
+### 9. `src/html/puzzle-result.html` — Puzzle Result
+Shows puzzle result and redirects to `anniversary.html`.
+
+### 10. `src/html/anniversary.html` — Anniversary Page
+Anniversary celebration page. Navigation links to `last.html`.
+- **CSS:** `anniversary.css`
+- **JS:** `anniversary.js`
+
+### 11. `src/html/last.html` — Love Letter
 A letter card that opens with a heart seal. Click to reveal the love letter with staggered text animation.
 - **CSS animations:** Card float keyframe | Heart pulse keyframe | Letter expand `max-height: 0→950px` transition | Text line reveal keyframe | Close shrink/fade animation
 - **Canvas effects:** Fireworks dots + bezier hearts + flower petals (`requestAnimationFrame` loop, color-coordinated particles)
@@ -81,6 +100,8 @@ Anniversary celebration page.
 | `src/css/profile.css` | Profile page styles |
 | `src/css/anniversary.css` | Anniversary page styles |
 | `src/css/cause.css` | Cause page styles |
+| `src/css/quiz.css` | Hello Kitty quiz page styles |
+| `src/css/puzzle-result.css` | Puzzle result page styles |
 
 ---
 

@@ -2330,6 +2330,7 @@
   </style>
 
 <body>
+  <audio id="bgMusic" src="../images/thun.mp3" autoplay loop></audio>
 
   <div class="hearts-bg" id="heartsBg"></div>
   <canvas id="trailCanvas"></canvas>
@@ -2959,8 +2960,8 @@
 
     /* ── Celebration - Open result page ── */
     function showCelebration() {
-      // Redirect to puzzle-result.html
-      window.location.href = 'puzzle-result.html';
+      // Redirect to puzzle-result.html in new tab (keeps music playing)
+      window.open('puzzle-result.html', '_blank');
     }
 
     /* ── Scramble ── */
