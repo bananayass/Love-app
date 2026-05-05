@@ -77,7 +77,7 @@
       width: 105px;
       height: 105px;
       border-radius: 12px;
-      background-image: url('../images/d1.jpg');
+      background-image: url('../images/d27.jpg');
       background-size: 315px 315px;
       cursor: grab;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
@@ -194,7 +194,7 @@
       }
     }
 
-    
+
     /* ════════════════════════════════════════════════════════════════
        ANIMATION 8: HEART CONSTELLATION — progress dots connect into heart
        Progress dots (1–9) when filled sequentially trace a heart shape
@@ -589,7 +589,7 @@
       inset: 0;
       width: 105px;
       height: 105px;
-      background-image: url('../images/d1.jpg');
+      background-image: url('../images/d27.jpg');
       background-size: 315px 315px;
       border-radius: 0;
       cursor: default;
@@ -617,7 +617,7 @@
     .frame-reference {
       position: absolute;
       inset: 0;
-      background-image: url('../images/d1.jpg');
+      background-image: url('../images/d27.jpg');
       background-size: 315px 315px;
       opacity: 0.15;
       filter: blur(4px) saturate(0.5);
@@ -2349,7 +2349,7 @@
     <div class="right-zone">
       <div class="frame-title" style="--delay:0.15s">✨ Ghép hình nào ✨</div>
       <div class="love-frame" id="loveFrame">
-                <!-- Shimmer sweep (Animation 12) -->
+        <!-- Shimmer sweep (Animation 12) -->
         <div class="shimmer-sweep" id="shimmerSweep"></div>
         <!-- Sparkle shimmer border (Animation 5) -->
         <div class="sparkle-ring" id="sparkleRing"></div>
@@ -2957,10 +2957,9 @@
       setTimeout(() => spawnHearts(cx + 100, cy - 50, 25), 260);
     }
 
-    /* ── Celebration - Open result page ── */
+    /* ── Celebration - Navigate to result page ── */
     function showCelebration() {
-      // Redirect to puzzle-result.html in new tab (keeps music playing)
-      window.open('puzzle-result.html', '_blank');
+      window.location.href = 'puzzle-result.html';
     }
 
     /* ── Scramble ── */

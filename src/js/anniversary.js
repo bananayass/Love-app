@@ -1,17 +1,17 @@
 // Milestone data (placeholder - edit with your real data)
 const milestones = {
-    1: { title: "Ngày đầu tiên", desc: "Anh còn nhớ lần đầu gặp em, em cười thật xinh 💕", image: "../images/d1.jpg" },
-    2: { title: "Lời yêu đầu tiên", desc: "Trái tim anh rung lên khi nghe giọng em nói yêu anh 💗", image: "../images/d2.jpg" },
-    3: { title: "Những buổi đi chơi", desc: "Chúng ta đi khắp nơi, mỗi khoảnh khắc đều đáng nhớ 🎉", image: "../images/d3.jpg" },
-    4: { title: "Sinh nhật đầu bên nhau", desc: "Sinh nhật của em, anh chúc em luôn vui vẻ nhé 🎂", image: "../images/d4.jpg" },
-    5: { title: "100 ngày bên nhau", desc: "Một trăm ngày bên em, anh chưa bao giờ hạnh phúc thế 💖", image: "../images/d1.jpg" },
-    6: { title: "Chuyến đi đầu tiên", desc: "Chuyến đi đầu cùng nhau, em là người đồng hành tuyệt vời ✈️", image: "../images/d2.jpg" },
-    7: { title: "Lần đầu nấu ăn", desc: "Bữa ăn đầu tiên anh nấu cho em, còn nhiều thiếu sót 🍳", image: "../images/d3.jpg" },
-    8: { title: "Xem phim cùng nhau", desc: "Những buổi xem phim với em luôn là khoảnh khắc đẹp 🎬", image: "../images/d4.jpg" },
-    9: { title: "Gặp gia đình", desc: "Anh vui vì được gặp gia đình em, cảm ơn em đã tin tưởng 👨‍👩‍👧", image: "../images/d1.jpg" },
-    10: { title: "Kỷ niệm 1 năm", desc: "Một năm trôi qua, anh yêu em nhiều hơn mỗi ngày 💍", image: "../images/d2.jpg" },
-    11: { title: "Đêm trăng đầu", desc: "Đêm trăng đẹp nhất bên cạnh em, mong được thế mãi 🌙", image: "../images/d3.jpg" },
-    12: { title: "Tương lai", desc: "Anh mong tương lai có em, từng ngày từng tháng từng năm 💝", image: "../images/d4.jpg" }
+    1: { title: "Ngày đầu tiên", desc: "Ngày đó bé khóc rất nhiều vì sợ a biết em là con bru chứ không phải con doàn 💕", image: "../images/th.jpg" },
+    2: { title: "Lời yêu đầu tiên", desc: "Anh rất vui khi nghe giọng em nói yêu anh, lúc đó cười tủm tỉm ha 💗", image: "../images/first.jpg" },
+    3: { title: "Những buổi đi chơi", desc: "Lần đầu ăn mà bị cấm chat không được cho nói =))) 🎉", image: "../images/donhat.jpg" },
+    4: { title: "Sinh nhật đầu bên nhau", desc: "Sinh nhật của Anh, được bé tặng quà vs đi ăn, đã nhất Trí Dũng 🎂", image: "../images/sn.jpg" },
+    5: { title: "Lại thêm sinh nhật anh", desc: "Hôm đó anh cảm động nhiều vì có người dành nhiều tình cảm cho anh đém vậy, cô gái này thật thú vị cô phải là của tôi 💖", image: "../images/trangden.jpg" },
+    6: { title: "Chuyến đi đầu tiên", desc: "Chuyến đi đầu cùng nhau, theo trai về nhà sau 1 ngày yêu nhau ha ✈️", image: "../images/chuyendidau.jpg" },
+    7: { title: "Lần đầu tô tượng", desc: "Bữa tô tượng đầu tiên với em, 2 đứa chọn cái gì mà khó vữ nè, iu bé nắm 🎨", image: "../images/totuong.jpg" },
+    8: { title: "Đi cổ vũ bé", desc: "Đi coi bé múa nè, ngày đó a cool ngầu còn bé đẹp gái 🎶", image: "../images/covu.jpg" },
+    9: { title: "Gặp gia đình", desc: "Anh vui vì được gặp gia đình em, cảm ơn em đã tin tưởng 👨‍👩‍👧", image: "../images/giad.jpg" },
+    10: { title: "Yêu xa", desc: "Hic phải yêu xa một thời gian, anh nhớ bé nhìuuu, chúng ta vượt qua cùng nhau 🏢", image: "../images/tuyenmay.jpg" },
+    11: { title: "Lần chèo súp đầu", desc: "Lần đầu được đi chèo súp và ăn mì mực với bé, Đi tìm kho báu và cái kết gặp chị huệ 🛶", image: "../images/cheosup.jpg" },
+    12: { title: "Camping", desc: "Chuyến đi camping mặc dù còn rất gì và này nọ nhưng mà kỷ niệm rất vui vứi anh, bé bơi như cá vị đóa⛺ ", image: "../images/anor.jpg" }
 };
 
 // Generate floating hearts
@@ -59,7 +59,7 @@ function createHeartCursor(event) {
         position: fixed;
         pointer-events: none;
         font-size: 1rem;
-        z-index: 9999;
+        z-index: 5;
         left: ${event.clientX}px;
         top: ${event.clientY}px;
         opacity: 0.8;
@@ -74,8 +74,8 @@ function createHeartCursor(event) {
 const heartStyle = document.createElement('style');
 heartStyle.textContent = `
     @keyframes heartFade {
-        0% { transform: scale(1) translateY(0); opacity: 0.8; }
-        100% { transform: scale(1.5) translateY(-50px); opacity: 0; }
+        0% { transform: scale(1) translateY(0); opacity: 0.8; pointer-events: none; }
+        100% { transform: scale(1.5) translateY(-50px); opacity: 0; pointer-events: none; }
     }
 `;
 document.head.appendChild(heartStyle);
@@ -171,8 +171,8 @@ function showPopup(node) {
         // Get node position
         const nodeRect = node.getBoundingClientRect();
         const popupWidth = 320;
-        const popupHeight = 400;
-        const offset = 5; // Small gap between node and popup
+        const popupHeight = 300;
+        const offset = 15; // Gap between node and popup
 
         // Left-side popup nodes: 3, 5, 8, 10, 11
         const leftSideNodes = ['3', '5', '8', '10', '11'];
@@ -182,11 +182,11 @@ function showPopup(node) {
         let left, top;
 
         if (showOnLeft) {
-            // Show popup directly on the left side of the node (edge to edge)
-            left = nodeRect.left - popupWidth;
+            // Show popup on the left side of the node with gap
+            left = nodeRect.left - popupWidth - offset;
         } else {
-            // Show popup directly on the right side of the node (edge to edge)
-            left = nodeRect.right;
+            // Show popup on the right side of the node with gap
+            left = nodeRect.right + offset;
         }
 
         // Center popup vertically relative to node
